@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LayerContext 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://www.java_conf.gr.jp/ke/namespace/foca" 
+xsi:schemaLocation="http://www.java_conf.gr.jp/ke/namespace/foca https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon.xsd">
+
+    <Aspect name="tracelog" advice="jp.gr.java_conf.ke.foca.aop.TraceLogAdvice"/>
+
+    <DataFlow type="UI" name="test">
+        <Controller>
+            <InputPort>
+                <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestUsecaseImpl"/>
+            </InputPort>
+            <Converter>
+                <BindDef outModel="jp.gr.java_conf.ke.foca.ExampleUnitTest$Data">
+                    <Bind>
+                        <From getter="get"/>
+                        <To setter="set"/>
+                    </Bind>
+                </BindDef>
+            </Converter>
+        </Controller>
+        <Presenter>
+            <View>
+                <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestView"/>
+            </View>
+            <Converter>
+                <BindDef outModel="jp.gr.java_conf.ke.foca.ExampleUnitTest$Data">
+                    <Bind>
+                        <From getter="get"/>
+                        <To setter="set"/>
+                    </Bind>
+                </BindDef>
+            </Converter>
+        </Presenter>
+    </DataFlow>
+
+    <DataFlow type="DB" name="test-db">
+        <EntryPoint>
+            <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestDBGatewayStub"/>
+        </EntryPoint>
+        <Gateway>
+            <Driver>
+                <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestDBGatewayStub"/>
+            </Driver>
+            <Converter>
+                <BindDef outModel="jp.gr.java_conf.ke.foca.ExampleUnitTest$Data">
+                    <Bind>
+                        <From getter="get"/>
+                        <To setter="set"/>
+                    </Bind>
+                </BindDef>
+            </Converter>
+        </Gateway>
+    </DataFlow>
+
+</LayerContext>
