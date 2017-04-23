@@ -29,7 +29,7 @@ public class DefaultConverter<IN, OUT, PARAM> extends AbstractConverter<IN, OUT,
 
     protected PARAM getInputFromMethod(final IN model, String methodName) throws Exception {
         if (model == null) return null;
-        return (PARAM) Reflection.callMethod(model, methodName, null);
+        return (PARAM) Reflection.callMethod(model, methodName);
     }
 
     protected PARAM getInputFromField(final IN model, String fieldName) throws Exception {
