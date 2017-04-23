@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:foca="http://www.java_conf.gr.jp/ke/namespace/foca"
+targetNamespace="http://www.java_conf.gr.jp/ke/namespace/foca"
+elementFormDefault="qualified">
+
+    <xsd:element name="LayerContext">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Logger" type="foca:Logger" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="Aspect" type="foca:Aspect" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="DataFlow" type="foca:DataFlow" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="extend" type="foca:SourceURL"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="Logger">
+        <xsd:sequence></xsd:sequence>
+        <xsd:attribute name="name" type="xsd:Name" default="DEFAULT"/>
+        <xsd:attribute name="level" type="foca:LogLevel" default="DEBUG"/>
+        <xsd:attribute name="class" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.aop.DefaultLogger"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="Aspect">
+        <xsd:sequence></xsd:sequence>
+        <xsd:attribute name="name" type="xsd:Name" use="required"/>
+        <xsd:attribute name="advice" type="foca:ClassName" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="DataFlow">
+        <xsd:sequence>
+            <xsd:element name="EntryPoint" type="foca:Joinpoint" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="Controller" type="foca:Controller" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="Presenter" type="foca:Presenter" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="Gateway" type="foca:Gateway" minOccurs="0" maxOccurs="2"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="type" type="foca:ContentType" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="Controller">
+        <xsd:sequence>
+            <xsd:group ref="foca:controllerGroup"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Presenter">
+        <xsd:sequence>
+            <xsd:group ref="foca:presenterGroup"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Gateway">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:group ref="foca:driverGroup"/>
+                <xsd:group ref="foca:controllerGroup"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="controllerGroup">
+        <xsd:sequence>
+            <xsd:element name="InputPort" type="foca:Joinpoint" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="Converter" type="foca:Converter" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:group name="presenterGroup">
+        <xsd:sequence>
+            <xsd:element name="View" type="foca:Joinpoint" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="Converter" type="foca:Converter" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:group name="driverGroup">
+        <xsd:sequence>
+            <xsd:element name="Driver" type="foca:Joinpoint" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="Converter" type="foca:Converter" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:complexType name="Converter">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="BindDef" type="foca:BindDef" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="Inject" type="foca:Injection" minOccurs="1" maxOccurs="1"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="BindDef">
+        <xsd:sequence>
+            <xsd:element name="Bind" type="foca:ItemBind" minOccurs="1" maxOccurs="1024"/>
+        </xsd:sequence>
+        <xsd:attribute name="outModel" type="foca:ClassName" use="required"/>
+        <xsd:attribute name="factory" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultFactory" />
+    </xsd:complexType>
+
+    <xsd:complexType name="ItemBind">
+        <xsd:sequence>
+            <xsd:element name="From" type="foca:BindAttr" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="To" type="foca:BindAttr" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="converter" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultConverter" />
+    </xsd:complexType>
+
+    <xsd:complexType name="Joinpoint">
+        <xsd:sequence>
+            <xsd:element name="Inject" type="foca:Injection" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="pointcut" type="foca:PointcutType" default="All"/>
+        <xsd:attribute name="list" type="foca:WeavingList"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="Injection">
+        <xsd:sequence></xsd:sequence>
+        <xsd:attribute name="class" type="foca:ClassName"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="LogLevel">
+        <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="DEBUG"/>
+            <xsd:enumeration value="TRACE"/>
+            <xsd:enumeration value="INFO"/>
+            <xsd:enumeration value="ERROR"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ContentType">
+        <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="UI"/>
+            <xsd:enumeration value="Web"/>
+            <xsd:enumeration value="DB"/>
+            <xsd:enumeration value="Device"/>
+            <xsd:enumeration value="Service"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="PointcutType">
+        <xsd:restriction base="xsd:Name">
+            <xsd:enumeration value="All"/>
+            <xsd:enumeration value="WhiteList"/>
+            <xsd:enumeration value="BlackList"/>
+            <xsd:enumeration value="Ignore"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="WeavingList">
+        <xsd:list itemType="xsd:Name"/>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ClassName">
+        <xsd:restriction base="xsd:normalizedString">
+            <xsd:pattern value="(.*)\.?(.*)"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="SourceURL">
+        <xsd:restriction base="xsd:anyURI">
+            <xsd:pattern value=".*\.xml"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="BindAttr">
+        <xsd:sequence></xsd:sequence>
+        <xsd:attribute name="field" type="xsd:Name" use="optional"/>
+        <xsd:attribute name="getter" type="xsd:Name" use="optional"/>
+        <xsd:attribute name="setter" type="xsd:Name" use="optional"/>
+    </xsd:complexType>
+
+</xsd:schema>
