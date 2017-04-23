@@ -1,0 +1,41 @@
+package jp.gr.java_conf.ke.foca.internal.injector;
+
+import java.lang.annotation.Annotation;
+
+import jp.gr.java_conf.ke.foca.DIContents;
+import jp.gr.java_conf.ke.foca.annotation.View;
+import jp.gr.java_conf.ke.foca.DefinitionNotFound;
+import jp.gr.java_conf.ke.foca.FocaException;
+import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.internal.adapter.AdapterFactory;
+import jp.gr.java_conf.ke.namespace.foca.Aspect;
+import jp.gr.java_conf.ke.namespace.foca.Converter;
+import jp.gr.java_conf.ke.namespace.foca.Presenter;
+
+/**
+ * Created by YT on 2017/03/26.
+ */
+
+class PresenterInjector extends Injector {
+
+    PresenterInjector(DIContents containts, String adapterName) {
+        super(containts, adapterName);
+    }
+
+    @Override
+    InterfaceAdapter<?, ?> getAdapter(DIContents contents, String presenterName)
+            throws FocaException {
+
+        Presenter presenter = contents.selectPresenter(presenterName);
+        Class<? extends Annotation> inputPortClass = View.class;
+        if (presenter == null) {
+            throw new DefinitionNotFound(getFieldName(), presenterName, inputPortClass);
+        }
+
+        Converter cnv = presenter.getConverter();
+        Iterable<Aspect> aspects = contents.aspecters();
+        return new AdapterFactory()
+                .createAdapter(cnv, inputPortClass, presenter.getView(), aspects);
+
+    }
+}

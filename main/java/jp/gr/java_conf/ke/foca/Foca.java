@@ -1,122 +1,119 @@
 package jp.gr.java_conf.ke.foca;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
+import java.net.URL;
+
+import jp.gr.java_conf.ke.foca.aop.DefaultLogger;
+import jp.gr.java_conf.ke.foca.aop.Logger;
+import jp.gr.java_conf.ke.foca.internal.InjectService;
+import jp.gr.java_conf.ke.foca.xml.FocaXmlParser;
+import jp.gr.java_conf.ke.foca.xml.XmlParseException;
+import jp.gr.java_conf.ke.namespace.foca.LayerContext;
 
 public class Foca {
 
+	private static final String VERSION = "0.1(PROTOTYPE)";
+
 	private static class Holder {
-		private static final Foca INSTANCE;
+		private static final Foca DEFAULT_INSTANCE;
 		static {
-			INSTANCE = new Foca(new Config());
+			DEFAULT_INSTANCE = new Foca(new LoggerThreadService());
 		}
 	}
 
 	public static Foca getDefault() {
-		return Holder.INSTANCE;
+		return Holder.DEFAULT_INSTANCE;
 	}
 
-	public static Foca updateDefault(Config config) {
-		Holder.INSTANCE.update(config);
-		return getDefault();
+	public static Foca updateDefault(URL diconXml) throws XmlParseException {
+		Foca ret = getDefault();
+		ret.update(diconXml);
+		return ret;
 	}
 
-	public static Foca getSpecial(Config config) {
-		return new Foca(config);
+	public static Foca updateDefault(DIContents contents) {
+		Foca ret = getDefault();
+		ret.update(contents);
+		return ret;
 	}
 
-	private Config config;
-
-	private Foca(Config config) {
-		update(config);
+	public static Foca getInstant(URL diconXml) throws XmlParseException {
+		Foca ret = new Foca(getDefault().getService());
+		ret.update(diconXml);
+		return ret;
 	}
 
-	public Config getConf() {
-		return config;
+	public static Foca getInstant(DIContents contents) {
+		Foca ret = new Foca(getDefault().getService());
+		ret.update(contents);
+		return ret;
 	}
 
-	private enum Context {
-		NEW,
-		CONTROLLER,
-		USECASE,
-		PRESENTER,
-		CALLBACK,
+	private URL sourceURL;
+	private DIContents contents;
+	private LoggerThreadService logService;
+	private InjectService injectService;
+
+	private Foca(LoggerThreadService logService) {
+		this.logService = logService;
+		this.injectService = new InjectService();
 	}
 
-	private Context context = Context.NEW;
+	public DIContents getContents() {
+		return contents;
+	}
 
-	@SuppressWarnings("rawtypes")
-	public synchronized void inject(Object target) {
-
-		if (target == null) throw new NullPointerException();
-		if (Context.CALLBACK.equals(context)) {
-			context = Context.NEW;
-			return;
-		}
-
+	public Logger getDefaultLogger() {
 		try {
-			Class clazz = target.getClass();
-			Class inject = Class.forName("javax.inject.Inject");
-
-			for (Mapper m : config.mappers()) {
-				for (Field f : clazz.getDeclaredFields()) {
-					Class fieldClass = f.getType();
-					for (Annotation anno : f.getAnnotations()) {
-						if (inject.equals(anno.annotationType())) {
-							Object injectee = injectee(m, fieldClass);
-							if (injectee != null) {
-								InvocationHandler aspecter = m.aspctInjectee(fieldClass);
-								if (aspecter != null) {
-									injectee = Proxy.newProxyInstance(
-											fieldClass.getClassLoader(),
-								            new Class[]{ fieldClass },
-								            aspecter);
-								}
-								inject(injectee);
-								f.set(target, injectee);
-								context = Context.NEW;
-								return;
-							}
-						}
-					}
-				}
-			}
+			return getLogger(LoggerThreadService.defaultLoggerName());
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			return new DefaultLogger();
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	private Object injectee(Mapper m, Class fieldClass) {
-		Object injectee = m.ctrlInjectee(fieldClass);
-		if (injectee == null) {
-			injectee = m.uscsInjectee(fieldClass);
-			if (injectee == null) {
-				injectee = m.prsntInjectee(fieldClass);
-				if (injectee == null) {
-					injectee = m.rpstrInjectee(fieldClass);
-					if (injectee == null) {
-						injectee = m.clbkInjectee(fieldClass);
-						context = Context.CALLBACK;
-					} else {
-						context = Context.PRESENTER;
-					}
-				} else {
-					context = Context.PRESENTER;
-				}
-			} else {
-				context = Context.USECASE;
-			}
-		} else {
-			context = Context.CONTROLLER;
+	public Logger getLogger(String name) {
+		try {
+			return logService.createLogger(contents.getLogger(name));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new DefaultLogger();
 		}
-		return injectee;
 	}
 
-	private void update(Config config) {
-		this.config = config;
+	public void inject(Object target) throws FocaException {
+		if (target == null) throw new NullPointerException();
+		synchronized(this) {
+			injectService.execute(sourceURL, contents, target);
+		}
 	}
 
+
+	private synchronized void update(URL diconXml) throws XmlParseException {
+		try {
+			LayerContext context = new FocaXmlParser(diconXml).parse();
+			update(DIContents.factory().create(context));
+			sourceURL = diconXml;
+		} catch (Exception e) {
+			XmlParseException ee = new XmlParseException(e);
+			ee.setURL(sourceURL);
+			throw ee;
+		}
+	}
+
+	private synchronized void update(DIContents contents) {
+		this.contents = contents;
+	}
+
+	private LoggerThreadService getService() {
+		return logService;
+	}
+
+	public String toString() {
+		return new StringBuilder()
+				.append("{Version:")
+				.append(VERSION)
+				.append(",sourceURL=")
+				.append(sourceURL)
+				.append("}").toString();
+	}
 }
