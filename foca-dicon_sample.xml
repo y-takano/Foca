@@ -9,7 +9,7 @@ xsi:schemaLocation="http://www.java_conf.gr.jp/ke/namespace/foca https://raw.git
     <DataFlow type="UI" name="test">
         <Controller>
             <InputPort>
-                <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestUsecaseImpl"/>
+                <Inject class="jp.gr.java_conf.ke.foca.ExampleUnitTest$TestUsecase"/>
             </InputPort>
             <Converter>
                 <BindDef outModel="jp.gr.java_conf.ke.foca.ExampleUnitTest$Data">
