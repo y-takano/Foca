@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema
-xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-xmlns:foca="http://www.java_conf.gr.jp/ke/namespace/foca"
-targetNamespace="http://www.java_conf.gr.jp/ke/namespace/foca"
+<xsd:schema 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns:foca="http://www.java_conf.gr.jp/ke/namespace/foca" 
+targetNamespace="http://www.java_conf.gr.jp/ke/namespace/foca" 
 elementFormDefault="qualified">
 
     <xsd:element name="LayerContext">
@@ -17,14 +17,14 @@ elementFormDefault="qualified">
     </xsd:element>
 
     <xsd:complexType name="Logger">
-        <xsd:sequence></xsd:sequence>
+        <xsd:sequence/>
         <xsd:attribute name="name" type="xsd:Name" default="DEFAULT"/>
         <xsd:attribute name="level" type="foca:LogLevel" default="DEBUG"/>
         <xsd:attribute name="class" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.aop.DefaultLogger"/>
     </xsd:complexType>
 
     <xsd:complexType name="Aspect">
-        <xsd:sequence></xsd:sequence>
+        <xsd:sequence/>
         <xsd:attribute name="name" type="xsd:Name" use="required"/>
         <xsd:attribute name="advice" type="foca:ClassName" use="required"/>
     </xsd:complexType>
@@ -116,7 +116,7 @@ elementFormDefault="qualified">
     </xsd:complexType>
 
     <xsd:complexType name="Injection">
-        <xsd:sequence></xsd:sequence>
+        <xsd:sequence/>
         <xsd:attribute name="class" type="foca:ClassName"/>
     </xsd:complexType>
 
@@ -165,7 +165,7 @@ elementFormDefault="qualified">
     </xsd:simpleType>
 
     <xsd:complexType name="BindAttr">
-        <xsd:sequence></xsd:sequence>
+        <xsd:sequence/>
         <xsd:attribute name="field" type="xsd:Name" use="optional"/>
         <xsd:attribute name="getter" type="xsd:Name" use="optional"/>
         <xsd:attribute name="setter" type="xsd:Name" use="optional"/>
