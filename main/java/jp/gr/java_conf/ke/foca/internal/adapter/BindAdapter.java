@@ -86,7 +86,7 @@ class BindAdapter implements InterfaceAdapter {
                             "OUT Parameter: " + outModel.getClass().getCanonicalName()
                     , e);
         }
-        weaver.invoke(null, method, new Object[]{param});
+        weaver.invoke(null, method, new Object[]{outModel});
     }
 
 }

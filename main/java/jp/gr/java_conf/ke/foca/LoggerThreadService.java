@@ -40,6 +40,9 @@ class LoggerThreadService {
         thread.setDaemon(true);
         thread.setName(LOGGER_THREAD_NAME);
         thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {}
     }
 
     Logger createLogger(jp.gr.java_conf.ke.namespace.foca.Logger xmlElement) throws FocaException {
