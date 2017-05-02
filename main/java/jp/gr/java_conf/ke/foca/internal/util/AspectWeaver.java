@@ -1,4 +1,4 @@
-package jp.gr.java_conf.ke.foca.internal;
+package jp.gr.java_conf.ke.foca.internal.util;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +20,10 @@ public class AspectWeaver implements InvocationHandler {
     public AspectWeaver(Object target, List<MethodAdvice> interceptors) {
         this.target = target;
         this.interceptors = interceptors == null ? Collections.<MethodAdvice>emptyList() : interceptors;
+    }
+
+    public Object invoke(Method method, Object arg) throws Throwable {
+        return invoke(null, method, arg == null ? null : new Object[]{arg});
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import jp.gr.java_conf.ke.foca.DIContents;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.internal.adapter.AdapterFactory;
 import jp.gr.java_conf.ke.util.Reflection;
 
 /**
@@ -16,10 +17,12 @@ public abstract class Injector {
     private String fieldName;
     private String adapterName;
     private DIContents contents;
+    private AdapterFactory factory;
 
-    Injector(DIContents containts, String adapterName) {
+    Injector(DIContents containts, String adapterName, AdapterFactory factory) {
         this.adapterName = adapterName;
         this.contents = containts;
+        this.factory = factory;
     }
 
     DIContents getContents() {
@@ -34,12 +37,16 @@ public abstract class Injector {
         return fieldName;
     }
 
+    protected AdapterFactory factory() {
+        return factory;
+    }
+
     abstract InterfaceAdapter<?, ?> getAdapter(DIContents containts, String adapterName) throws FocaException;
 
     public void inject(Object injectee, Field targetField)
             throws FocaException {
         fieldName = targetField.getName();
         InterfaceAdapter<?, ?> adapter = getAdapter(contents, adapterName);
-        Reflection.setFieldValue(injectee, fieldName, adapter);
+        Reflection.setFieldValue(injectee, targetField, adapter);
     }
 }

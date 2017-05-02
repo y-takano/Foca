@@ -16,7 +16,7 @@ import jp.gr.java_conf.ke.util.Reflection;
 class LoggerInjector extends Injector {
 
     LoggerInjector(DIContents containts, String adapterName) {
-        super(containts, adapterName);
+        super(containts, adapterName, null);
     }
 
     @Override
@@ -26,7 +26,13 @@ class LoggerInjector extends Injector {
 
     public void inject(Object injectee, Field targetField) {
         jp.gr.java_conf.ke.namespace.foca.Logger logger = getContents().getLogger(getName());
-        Logger log = Foca.getDefault().getLogger(logger.getName());
+        Foca fw = Foca.getDefault();
+        Logger log;
+        if (logger == null) {
+            log = fw.getDefaultLogger();
+        } else {
+            log = fw.getLogger(logger.getName());
+        }
         Reflection.setFieldValue(injectee, targetField, log);
     }
 }

@@ -18,8 +18,8 @@ import jp.gr.java_conf.ke.namespace.foca.Presenter;
 
 class PresenterInjector extends Injector {
 
-    PresenterInjector(DIContents containts, String adapterName) {
-        super(containts, adapterName);
+    PresenterInjector(DIContents containts, String adapterName, AdapterFactory factory) {
+        super(containts, adapterName, factory);
     }
 
     @Override
@@ -34,8 +34,7 @@ class PresenterInjector extends Injector {
 
         Converter cnv = presenter.getConverter();
         Iterable<Aspect> aspects = contents.aspecters();
-        return new AdapterFactory()
-                .createAdapter(cnv, inputPortClass, presenter.getView(), aspects);
-
+        return factory().createAdapter(
+                cnv, inputPortClass, presenter.getView(), aspects);
     }
 }

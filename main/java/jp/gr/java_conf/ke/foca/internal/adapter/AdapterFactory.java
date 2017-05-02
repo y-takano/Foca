@@ -3,13 +3,16 @@ package jp.gr.java_conf.ke.foca.internal.adapter;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import jp.gr.java_conf.ke.foca.Foca;
 import jp.gr.java_conf.ke.foca.XmlConsistencyException;
 import jp.gr.java_conf.ke.foca.adapter.OutModelFactory;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
-import jp.gr.java_conf.ke.foca.internal.MethodAdvices;
+import jp.gr.java_conf.ke.foca.internal.InjectRequest;
+import jp.gr.java_conf.ke.foca.internal.InjectService;
+import jp.gr.java_conf.ke.foca.internal.InjectState;
+import jp.gr.java_conf.ke.foca.internal.InjectionOrder;
+import jp.gr.java_conf.ke.foca.internal.util.MethodAdvices;
 import jp.gr.java_conf.ke.util.Reflection;
 import jp.gr.java_conf.ke.namespace.foca.Aspect;
 import jp.gr.java_conf.ke.namespace.foca.BindDef;
@@ -22,6 +25,12 @@ import jp.gr.java_conf.ke.namespace.foca.Joinpoint;
 
 public class AdapterFactory {
 
+    private InjectRequest nowRequest;
+
+    public AdapterFactory(InjectRequest request) {
+        this.nowRequest = request;
+    }
+
     public InterfaceAdapter<?, ?> createAdapter(
             Converter cnv, Class<? extends Annotation> annoClass, Joinpoint joinpoint, Iterable<Aspect> aspectList)
             throws FocaException {
@@ -31,17 +40,24 @@ public class AdapterFactory {
         String injectClassName = joinpoint.getInject().getClazz();
         BindDef def = cnv.getBindDef();
         if (def == null) {
-            String className = cnv.getInject().getClazz();
-            InterfaceAdapter plugin = Reflection.newInstance(className, InterfaceAdapter.class);
-            Object field = Reflection.newInstance(injectClassName);
-            Foca.getDefault().inject(field);
-            ret = new PluginAdapter(plugin, annoClass, field, advices);
+            InjectState state = nowRequest.getState();
+            if (!state.isCallable(InjectionOrder.valueOf(annoClass))) {
+                String className = cnv.getInject().getClazz();
+                InterfaceAdapter plugin = Reflection.newInstance(className, InterfaceAdapter.class);
+                Object field = Reflection.newInstance(injectClassName);
+                InjectRequest nextRequest = new InjectRequest(nowRequest, field);
+                new InjectService().execute(nextRequest);
+                ret = new PluginAdapter(plugin, annoClass, field, advices);
+            } else {
+                ret = null;
+            }
         } else {
             String factoryName = def.getFactory();
             String outModelName = def.getOutModel();
             Object outModel = createModelFactory(factoryName, outModelName);
             Object callee = Reflection.newInstance(injectClassName);
-            Foca.getDefault().inject(callee);
+            InjectRequest nextRequest = new InjectRequest(nowRequest, callee);
+            new InjectService().execute(nextRequest);
             ret = new BindAdapter(callee, outModel, advices, annoClass, def.getBind());
         }
         return ret;

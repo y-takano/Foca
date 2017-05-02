@@ -1,4 +1,4 @@
-package jp.gr.java_conf.ke.foca.internal;
+package jp.gr.java_conf.ke.foca.internal.util;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
-import jp.gr.java_conf.ke.foca.internal.AspectWeaver;
+import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.InjectException;

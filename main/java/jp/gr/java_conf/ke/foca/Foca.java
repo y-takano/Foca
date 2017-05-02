@@ -4,6 +4,7 @@ import java.net.URL;
 
 import jp.gr.java_conf.ke.foca.aop.DefaultLogger;
 import jp.gr.java_conf.ke.foca.aop.Logger;
+import jp.gr.java_conf.ke.foca.internal.InjectRequest;
 import jp.gr.java_conf.ke.foca.internal.InjectService;
 import jp.gr.java_conf.ke.foca.xml.FocaXmlParser;
 import jp.gr.java_conf.ke.foca.xml.XmlParseException;
@@ -83,7 +84,8 @@ public class Foca {
 	public void inject(Object target) throws FocaException {
 		if (target == null) throw new NullPointerException();
 		synchronized(this) {
-			injectService.execute(sourceURL, contents, target);
+            InjectRequest request = new InjectRequest(sourceURL, contents, target);
+			injectService.execute(request);
 		}
 	}
 

@@ -87,6 +87,26 @@ public class Reflection {
         return ret;
     }
 
+    public static <E> E callMethod(Object model, Method method, Object... args) {
+        E r;
+        try {
+            if (args == null) {
+                r = (E) method.invoke(model);
+            } else {
+                r = (E) method.invoke(model, args);
+            }
+        } catch (IllegalAccessException e) {
+            throw new ReflectiveException(e);
+
+        } catch (InvocationTargetException e) {
+            throw new ReflectiveException(e.getTargetException());
+
+        } catch (ClassCastException e) {
+            throw new ReflectiveException(e);
+        }
+        return (E) r;
+    }
+
     public static <E> E getFieldValue(Object model, String fieldName) {
         if (model == null) throw new NullPointerException("model is null");
         if (fieldName == null) throw new NullPointerException("fieldName is null");

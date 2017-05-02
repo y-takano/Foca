@@ -3,8 +3,11 @@ package jp.gr.java_conf.ke.foca.internal.adapter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
-import jp.gr.java_conf.ke.foca.internal.AspectWeaver;
+import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
 import jp.gr.java_conf.ke.foca.adapter.ParamTypeConverter;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
@@ -35,7 +38,7 @@ class BindAdapter implements InterfaceAdapter {
     private final Method method;
 
     /** データ変換定義 */
-    private final List<ItemBind> bindList;
+    private final Map<ItemBind, ParamTypeConverter> cnvMap;
 
     /**
      * 出力パラメータ.<br>
@@ -61,18 +64,31 @@ class BindAdapter implements InterfaceAdapter {
             );
         }
 
-        this.method = targetMethod;
+        this.cnvMap = new ConcurrentHashMap<ItemBind, ParamTypeConverter>();
+        try {
+            for (ItemBind bind : bindList) {
+                ParamTypeConverter cnverter = Reflection.newInstance(
+                        bind.getConverter(), ParamTypeConverter.class);
+                cnvMap.put(bind, cnverter);
+            }
+        } catch (Exception e) {
+            throw new XmlConsistencyException(
+                    "Bind定義に指定されたクラスを生成できません。XMLの定義と実装を見直してください。" + NL +
+                            "対象クラス: " + callee.getClass().getCanonicalName() + NL +
+                            "マーカー　: " + annotation.getCanonicalName()
+            );
+        }
         this.weaver = new AspectWeaver(callee, advices);
-        this.bindList = bindList;
+        this.method = targetMethod;
         this.outModel = outModel;
     }
 
     @Override
     public void invoke(Object param) throws Throwable {
         try {
-            for (ItemBind bind : bindList) {
-                ParamTypeConverter cnverter = Reflection.newInstance(bind.getConverter(), ParamTypeConverter.class);
-                outModel = cnverter.convert(param, outModel, bind);
+            for (Entry<ItemBind, ParamTypeConverter> entry : cnvMap.entrySet()) {
+                outModel = entry.getValue().convert(
+                        param, outModel, entry.getKey());
             }
         } catch (SecurityException e) {
             throw new InjectException(
@@ -86,7 +102,7 @@ class BindAdapter implements InterfaceAdapter {
                             "OUT Parameter: " + outModel.getClass().getCanonicalName()
                     , e);
         }
-        weaver.invoke(null, method, new Object[]{outModel});
+        weaver.invoke(method, outModel);
     }
 
 }

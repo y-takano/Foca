@@ -18,8 +18,8 @@ import jp.gr.java_conf.ke.namespace.foca.Converter;
 
 class ControllerInjector extends Injector {
 
-    ControllerInjector(DIContents containts, String adapterName) {
-        super(containts, adapterName);
+    ControllerInjector(DIContents containts, String adapterName, AdapterFactory factory) {
+        super(containts, adapterName, factory);
     }
 
     @Override
@@ -35,7 +35,7 @@ class ControllerInjector extends Injector {
 
         Converter cnv = ctrler.getConverter();
         Iterable<Aspect> aspects = contents.aspecters();
-        return new AdapterFactory()
-                .createAdapter(cnv, inputPortClass, ctrler.getInputPort(), aspects);
+        return factory().createAdapter(
+                cnv, inputPortClass, ctrler.getInputPort(), aspects);
     }
 }

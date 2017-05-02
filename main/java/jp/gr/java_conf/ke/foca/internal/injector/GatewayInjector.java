@@ -23,8 +23,8 @@ class GatewayInjector extends Injector {
 
     private static final String NL = System.getProperty("line.separator");
 
-    GatewayInjector(DIContents containts, String adapterName) {
-        super(containts, adapterName);
+    GatewayInjector(DIContents containts, String adapterName, AdapterFactory factory) {
+        super(containts, adapterName, factory);
     }
 
     @Override
@@ -83,14 +83,14 @@ class GatewayInjector extends Injector {
 
         Joinpoint inputPort = gateway.getInputPort();
         if (inputPort != null) {
-            adapter = new AdapterFactory()
-                    .createAdapter(cnv, InputPort.class, inputPort, aspects);
+            adapter = factory().createAdapter(
+                    cnv, InputPort.class, inputPort, aspects);
         }
 
         Joinpoint driver = gateway.getDriver();
         if (driver != null) {
-            adapter = new AdapterFactory()
-                    .createAdapter(cnv, Driver.class, driver, aspects);
+            adapter = factory().createAdapter(
+                    cnv, Driver.class, driver, aspects);
         }
 
         return adapter;
