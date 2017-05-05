@@ -38,6 +38,7 @@ public class FocaXmlSchema {
             StringBuilder sb = new StringBuilder();
             while ((buf = br.readLine()) != null) {
                 sb.append(buf);
+                sb.append(System.getProperty("line.separator"));
             }
             source = sb.toString();
             v.validate(new StreamSource(

@@ -10,7 +10,11 @@ public class InjectException extends FocaException {
         super(msg);
     }
 
-    public InjectException(String msg, Exception e) {
+    public InjectException(Throwable e) {
+        super(e);
+    }
+
+    public InjectException(String msg, Throwable e) {
         super(msg, e);
     }
 

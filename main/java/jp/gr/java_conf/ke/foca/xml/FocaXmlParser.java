@@ -48,8 +48,4 @@ public class FocaXmlParser extends XmlPushParser<LayerContext> {
     @Override
     protected void text(XmlElement element, String cdata) {}
 
-    public LayerContext parse() throws XmlSourceExeption {
-        return super.parse();
-    }
-
 }

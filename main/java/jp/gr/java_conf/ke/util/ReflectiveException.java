@@ -7,7 +7,7 @@ package jp.gr.java_conf.ke.util;
 public class ReflectiveException extends RuntimeException {
 
     public ReflectiveException(String msg) {
-        super(msg);
+        this(msg, null);
     }
 
     public ReflectiveException(Throwable cause) {
@@ -15,6 +15,6 @@ public class ReflectiveException extends RuntimeException {
     }
 
     public ReflectiveException(String msg, Throwable cause) {
-        super(msg, cause);
+        super(msg + "(" + cause.getClass().getSimpleName() + ")", cause);
     }
 }

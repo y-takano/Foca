@@ -36,7 +36,7 @@ public class InjectState {
     }
 
     public Object getTarget() {
-        return targetChain.getFirst();
+        return targetChain.isEmpty() ? null : targetChain.getFirst();
     }
 
     /**
