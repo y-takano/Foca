@@ -21,7 +21,7 @@ package jp.gr.java_conf.ke.namespace.foca;
  *         &lt;element name="From" type="{http://www.java_conf.gr.jp/ke/namespace/foca}BindAttr"/>
  *         &lt;element name="To" type="{http://www.java_conf.gr.jp/ke/namespace/foca}BindAttr"/>
  *       &lt;/sequence>
- *       &lt;attribute name="converter" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultConverter" />
+ *       &lt;attribute name="converter" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ClassName" default="jp.gr.java_conf.ke.foca.converter.DefaultConverter" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -93,7 +93,7 @@ public class ItemBind {
      */
     public String getConverter() {
         if (converter == null) {
-            return "jp.gr.java_conf.ke.foca.adapter.DefaultConverter";
+            return "jp.gr.java_conf.ke.foca.converter.DefaultConverter";
         } else {
             return converter;
         }

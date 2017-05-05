@@ -83,7 +83,7 @@ class XmlNodeBuilder {
                 if (attr.getQName().equals("extend")) {
                     try {
                         URL url = new URL(attr.getValue());
-                        this.context = new FocaXmlParser(url).parse();
+                        this.context = new FocaXmlParser(FocaXmlSchema.validate(url)).parse();
                     } catch (Exception e) {
                         callFatalError(e.getMessage(), element);
                     }

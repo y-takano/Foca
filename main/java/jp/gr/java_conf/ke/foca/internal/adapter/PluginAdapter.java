@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+import jp.gr.java_conf.ke.foca.adapter.FetchableAdapter;
 import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
@@ -16,7 +17,7 @@ import jp.gr.java_conf.ke.util.Reflection;
  * Created by YT on 2017/03/26.
  */
 
-class PluginAdapter implements InterfaceAdapter {
+class PluginAdapter implements FetchableAdapter {
 
     private static final String NL = System.getProperty("line.separator");
 
@@ -49,10 +50,9 @@ class PluginAdapter implements InterfaceAdapter {
             );
         }
 
-        Object proxy = createProxy(injectee, advices, targetField.getType());
+        Object proxy = createProxy(injectee, advices);
         Reflection.setFieldValue(callee, targetField, proxy);
-        this.callee = (InterfaceAdapter) createProxy(
-                callee, advices, InterfaceAdapter.class);
+        this.callee = (InterfaceAdapter) createProxy(callee, advices);
     }
 
     @Override
@@ -60,11 +60,18 @@ class PluginAdapter implements InterfaceAdapter {
         callee.invoke(param);
     }
 
-    private Object createProxy(Object target, List<MethodAdvice> interceptors, Class fieldClass)
-            throws FocaException {
+    @Override
+    public Object fetch(Object param) throws Throwable {
+        return ((FetchableAdapter)callee).fetch(param);
+    }
+
+    private Object createProxy(Object target, List<MethodAdvice> interceptors) throws FocaException {
+        Class clazz;
+        if (target instanceof FetchableAdapter) clazz = FetchableAdapter.class;
+        else clazz = InterfaceAdapter.class;
         return Proxy.newProxyInstance(
                 target.getClass().getClassLoader(),
-                new Class[]{fieldClass},
+                new Class[]{clazz},
                 new AspectWeaver(target, interceptors));
     }
 

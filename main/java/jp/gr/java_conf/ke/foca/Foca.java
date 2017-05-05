@@ -7,12 +7,14 @@ import jp.gr.java_conf.ke.foca.aop.Logger;
 import jp.gr.java_conf.ke.foca.internal.InjectRequest;
 import jp.gr.java_conf.ke.foca.internal.InjectService;
 import jp.gr.java_conf.ke.foca.xml.FocaXmlParser;
+import jp.gr.java_conf.ke.foca.xml.FocaXmlSchema;
 import jp.gr.java_conf.ke.foca.xml.XmlParseException;
 import jp.gr.java_conf.ke.namespace.foca.LayerContext;
+import jp.gr.java_conf.ke.util.Reflection;
 
 public class Foca {
 
-	private static final String VERSION = "0.1(PROTOTYPE)";
+	private static final String VERSION = "1.0.4(proto)";
 
 	private static class Holder {
 		private static final Foca DEFAULT_INSTANCE;
@@ -49,6 +51,10 @@ public class Foca {
 		return ret;
 	}
 
+	public static Logger getFocaDefaultLogger() {
+		return new DefaultLogger();
+	}
+
 	private URL sourceURL;
 	private DIContents contents;
 	private LoggerThreadService logService;
@@ -65,19 +71,29 @@ public class Foca {
 
 	public Logger getDefaultLogger() {
 		try {
+			if (contents == null) {
+				System.err.println("Foca is not initialized. return FocaDefaultLogger.");
+				System.err.println(Thread.currentThread().getStackTrace()[2]);
+				return Foca.getFocaDefaultLogger();
+			}
 			return getLogger(LoggerThreadService.defaultLoggerName());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new DefaultLogger();
+			return Foca.getFocaDefaultLogger();
 		}
 	}
 
 	public Logger getLogger(String name) {
 		try {
+			if (contents == null) {
+				System.err.println("Foca is not initialized. return FocaDefaultLogger.");
+				System.err.println(Thread.currentThread().getStackTrace()[2]);
+				return Foca.getFocaDefaultLogger();
+			}
 			return logService.createLogger(contents.getLogger(name));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new DefaultLogger();
+			return Foca.getFocaDefaultLogger();
 		}
 	}
 
@@ -89,15 +105,29 @@ public class Foca {
 		}
 	}
 
+	public <E> E createInstance(Class<E> target) throws FocaException {
+		if (target == null) throw new NullPointerException();
+		E instance;
+		try {
+			instance = Reflection.newInstance(target);
+		} catch (Exception e) {
+			FocaException ee = new InjectException("クラスの生成に失敗しました。", e);
+			ee.setURL(sourceURL);
+			throw ee;
+		}
+		inject(instance);
+		return instance;
+	}
 
 	private synchronized void update(URL diconXml) throws XmlParseException {
 		try {
-			LayerContext context = new FocaXmlParser(diconXml).parse();
+			LayerContext context = new FocaXmlParser(
+					FocaXmlSchema.validate(diconXml)).parse();
 			update(DIContents.factory().create(context));
 			sourceURL = diconXml;
 		} catch (Exception e) {
 			XmlParseException ee = new XmlParseException(e);
-			ee.setURL(sourceURL);
+			ee.setURL(diconXml);
 			throw ee;
 		}
 	}
@@ -112,10 +142,10 @@ public class Foca {
 
 	public String toString() {
 		return new StringBuilder()
-				.append("{Version:")
+				.append("{Version:\"")
 				.append(VERSION)
-				.append(",sourceURL=")
-				.append(sourceURL)
-				.append("}").toString();
+				.append("\", sourceURL=\"")
+				.append(sourceURL==null ? "[embedded]":sourceURL)
+				.append("\"}").toString();
 	}
 }

@@ -1,5 +1,6 @@
 package jp.gr.java_conf.ke.foca.internal;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -24,9 +25,9 @@ import jp.gr.java_conf.ke.util.Reflection;
 public class InjectService {
 
     public void execute(InjectRequest request) throws FocaException {
-        Object targetInstance = request.getTarget().getInstance();
+        InjectState state = request.getState();
+        Object targetInstance = state.getTarget();
         try {
-            InjectState state = request.getState();
             Field[] fields = targetInstance.getClass().getDeclaredFields();
 
             // @Gatewayの収集
@@ -34,25 +35,32 @@ public class InjectService {
                     InjectionOrder.Gateway).validate();
             if (!gateway.isEmpty()) {
                 // Endpointを起動
-                if (state.isCallable(InjectionOrder.Entrypoint))
-                    startEntrypointService(gateway, request);
+                startEntrypointService(gateway, request);
                 // Dataflow注入実行
                 if (state.isInjectable(InjectionOrder.Gateway))
                     inject(gateway, request);
             }
 
-            // @Controller, @Presenterの収集
-            Collection<EnabledMarker> flow = Annotations.collect(fields,
-                    InjectionOrder.Controller,
-                    InjectionOrder.Presenter).validate();
-            if (!flow.isEmpty()) {
+            // @Controllerの収集
+            Collection<EnabledMarker> controller = Annotations.collect(fields,
+                    InjectionOrder.Controller).validate();
+            if (!controller.isEmpty()) {
                 // Endpointを起動
-                if (state.isCallable(InjectionOrder.Entrypoint))
-                    startEntrypointService(flow, request);
+                startEntrypointService(controller, request);
                 // Dataflow注入実行
-                if (state.isInjectable(InjectionOrder.Controller)
-                        || state.isInjectable(InjectionOrder.Presenter))
-                    inject(flow, request);
+                if (state.isInjectable(InjectionOrder.Controller))
+                    inject(controller, request);
+            }
+
+            // @Presenterの収集
+            Collection<EnabledMarker> presenter = Annotations.collect(fields,
+                    InjectionOrder.Presenter).validate();
+            if (!presenter.isEmpty()) {
+                // Endpointを起動
+                startEntrypointService(presenter, request);
+                // Dataflow注入実行
+                if (state.isInjectable(InjectionOrder.Presenter))
+                    inject(presenter, request);
             }
 
             // plugin型Adapterの@InputPort, @View, @Driverを収集
@@ -76,6 +84,9 @@ public class InjectService {
                 if (state.isInjectable(InjectionOrder.Log)) inject(log, request);
             }
 
+            // 処理完了を通知
+            state.complete();
+
         } catch (FocaException e) {
             e.setURL(request.getSourceURL());
             e.setDITarget(targetInstance);
@@ -88,10 +99,11 @@ public class InjectService {
 
         DIContents contents = request.getContents();
         Joinpoint joinpoint = null;
+        String flowName = null;
         for (EnabledMarker marker : component) {
-            String name = Annotations.getFlowName(marker.annotation());
-            if (name == null) continue;
-            joinpoint = contents.selectEntrypoint(name);
+            flowName = Annotations.getFlowName(marker.annotation());
+            if (flowName == null) continue;
+            joinpoint = contents.selectEntrypoint(flowName);
         }
 
         // EntryPoint未定義は正常。
@@ -105,12 +117,24 @@ public class InjectService {
             throw new InternalError("xsdと処理結果が矛盾。");
         }
 
-        // EntryPointへLogを注入
+        // 起動待機中のエントリポイントでない（起動済）場合は何もしない
         InjectState state = request.getState();
-        Collection<EnabledMarker> log =
-                Annotations.collect(target.getClass().getDeclaredFields(),
+        if (!state.isReadyEntryPoint(flowName)) return;
+
+        // EntryPointへLogを注入
+        Collection<EnabledMarker> log = Annotations.collect(
+                target.getClass().getDeclaredFields(),
                 InjectionOrder.Log).validate();
-        if (state.isInjectable(InjectionOrder.Log)) inject(log, request);
+        if (!log.isEmpty()) {
+            // Log注入実行
+            if (state.isInjectable(InjectionOrder.Log)) {
+                for (EnabledMarker marker : log) {
+                    InjectorFactory factory = new InjectorFactory(request);
+                    Injector injector = factory.create(marker.annotation());
+                    injector.inject(target, marker.field());
+                }
+            }
+        }
 
         // AspectWeaverを生成
         List<MethodAdvice> advices =
@@ -135,12 +159,14 @@ public class InjectService {
     }
 
     private void inject(Iterable<EnabledMarker> component, InjectRequest request) throws FocaException {
-        Object targetInstance = request.getTarget().getInstance();
-        DIContents contents = request.getContents();
+        Object targetInstance = request.getState().getTarget();
         InjectorFactory factory = new InjectorFactory(request);
         for (EnabledMarker marker : component) {
-            Injector injector = factory.create(marker.annotation());
+            Annotation anno = marker.annotation();
+            Injector injector = factory.create(anno);
             injector.inject(targetInstance, marker.field());
+            InjectionOrder order = InjectionOrder.valueOf(anno);
+            request.getState().done(order);
         }
     }
 

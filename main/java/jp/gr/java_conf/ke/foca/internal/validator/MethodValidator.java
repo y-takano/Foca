@@ -26,6 +26,7 @@ class MethodValidator extends Validator {
             InjectionOrder.Inputport.getRelativeClass(),
             InjectionOrder.Driver.getRelativeClass(),
             InjectionOrder.View.getRelativeClass(),
+            InjectionOrder.Entrypoint.getRelativeClass(),
     };
 
     private boolean isEnable(Annotation anno) {

@@ -2,6 +2,10 @@ package jp.gr.java_conf.ke.foca.internal;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by YT on 2017/04/27.
@@ -9,7 +13,31 @@ import java.util.Deque;
 
 public class InjectState {
 
+    private static final Map<Integer, Set<String>> entryCache = new HashMap<Integer, Set<String>>();
+    private final Integer fwId;
     private Deque<InjectionOrder> injectChain = new ArrayDeque<InjectionOrder>();
+    private Deque<Object> targetChain = new ArrayDeque<Object>();
+
+    public InjectState(Integer fwId, Object target) {
+        this.fwId = fwId;
+        setNext(target);
+    }
+
+    public void setNext(Object target) {
+        targetChain.push(target);
+    }
+
+    public void complete() {
+        targetChain.pop();
+    }
+
+    public void done(InjectionOrder done) {
+        if (done.equals(lastOrder())) injectChain.pop();
+    }
+
+    public Object getTarget() {
+        return targetChain.getFirst();
+    }
 
     /**
      * injectorの有効性を取得.
@@ -27,18 +55,21 @@ public class InjectState {
                 if (1 < injectChain.size()) return false;
                 else if (injectChain.isEmpty()) {
                     ret = true;
-                    injectChain.push(next);
+                    push(next);
                 }
                 break;
 
             case Presenter:
                 if (2 < injectChain.size()) return false;
-                else if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                else if (injectChain.isEmpty()) {
+                    ret = true;
+                    push(next);
+                } else {
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Controller)
                             || last.equals(InjectionOrder.Gateway)) {
                         ret = true;
-                        injectChain.push(next);
+                        push(next);
                     }
                 }
                 break;
@@ -47,21 +78,24 @@ public class InjectState {
                 if (4 < injectChain.size()) return false;
                 else if (injectChain.isEmpty()) {
                     ret = true;
-                    injectChain.push(next);
+                    push(next);
                 } else {
-                    InjectionOrder last = injectChain.getFirst();
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Controller)
                             || last.equals(InjectionOrder.Gateway)) {
                         ret = true;
-                        injectChain.push(next);
+                        push(next);
                     }
                 }
                 break;
 
             case Inputport:
                 if (3 < injectChain.size()) return false;
-                else if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getLast();
+                else if (injectChain.isEmpty()) {
+                    ret = true;
+                    push(next);
+                } else {
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Controller)
                             || last.equals(InjectionOrder.Gateway)) {
                         ret = true;
@@ -71,8 +105,11 @@ public class InjectState {
 
             case View:
                 if (2 < injectChain.size()) return false;
-                else if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                else if (injectChain.isEmpty()) {
+                    ret = true;
+                    push(next);
+                } else {
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Presenter)) {
                         ret = true;
                     }
@@ -81,8 +118,11 @@ public class InjectState {
 
             case Driver:
                 if (4 < injectChain.size()) return false;
-                else if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                else if (injectChain.isEmpty()) {
+                    ret = true;
+                    push(next);
+                } else {
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Gateway)) {
                         ret = true;
                     }
@@ -91,6 +131,19 @@ public class InjectState {
 
             default:
                 break;
+        }
+        return ret;
+    }
+
+    public boolean isReadyEntryPoint(String flowName) {
+        boolean ret = false;
+        Set<String> cache = entryCache.get(fwId);
+        if (cache == null) {
+            entryCache.put(fwId, new HashSet<String>());
+            ret = true;
+        } else if (!cache.contains(flowName)) {
+            cache.add(flowName);
+            ret = true;
         }
         return ret;
     }
@@ -103,15 +156,9 @@ public class InjectState {
     public boolean isCallable(InjectionOrder next) {
         boolean ret = false;
         switch (next) {
-            case Entrypoint:
-                if (injectChain.isEmpty()) {
-                    ret = true;
-                }
-                break;
-
             case Inputport:
                 if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Controller) ||
                             last.equals(InjectionOrder.Gateway)) {
                         ret = true;
@@ -121,7 +168,7 @@ public class InjectState {
 
             case View:
                 if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Presenter)) {
                         ret = true;
                     }
@@ -130,7 +177,7 @@ public class InjectState {
 
             case Driver:
                 if (!injectChain.isEmpty()) {
-                    InjectionOrder last = injectChain.getFirst();
+                    InjectionOrder last = lastOrder();
                     if (last.equals(InjectionOrder.Gateway)) {
                         ret = true;
                     }
@@ -143,4 +190,18 @@ public class InjectState {
         return ret;
     }
 
+    private InjectionOrder lastOrder() {
+        return injectChain.isEmpty() ? null : injectChain.getFirst();
+    }
+
+    private void push(InjectionOrder next) {
+        injectChain.push(next);
+    }
+
+    public String toString() {
+        return new StringBuilder("{")
+                .append("target=").append(getTarget())
+                .append(", nextProc=").append(lastOrder())
+                .append("}").toString();
+    }
 }

@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import jp.gr.java_conf.ke.foca.XmlConsistencyException;
-import jp.gr.java_conf.ke.foca.adapter.OutModelFactory;
+import jp.gr.java_conf.ke.foca.converter.OutModelFactory;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;

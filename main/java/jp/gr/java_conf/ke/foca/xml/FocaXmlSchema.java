@@ -1,8 +1,8 @@
 package jp.gr.java_conf.ke.foca.xml;
 
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,21 +26,30 @@ public class FocaXmlSchema {
     private static final String URL_GITHUB_MASTER =
             "https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon.xsd";
 
-    public static void validate(URL xmlSource) throws IOException, SAXException {
+    public static InputSource validate(URL xmlSource) throws IOException, SAXException {
         SchemaFactory xsd = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = xsd.newSchema(new StreamSource(getXsdReader()));
         Validator v = schema.newValidator();
-        InputStream is = null;
+        String source = null;
+        BufferedReader br = null;
         try {
-            is = xmlSource.openStream();
-            v.validate(new StreamSource(is));
+            br = new BufferedReader(new InputStreamReader(xmlSource.openStream(), "UTF-8"));
+            String buf;
+            StringBuilder sb = new StringBuilder();
+            while ((buf = br.readLine()) != null) {
+                sb.append(buf);
+            }
+            source = sb.toString();
+            v.validate(new StreamSource(
+                    new StringReader(source)));
         } finally {
-            if (is != null) {
+            if (br != null) {
                 try {
-                    is.close();
-                } catch (IOException e) {}
+                    br.close();
+                } catch(Exception e) {}
             }
         }
+        return new InputSource(new StringReader(source));
     }
 
     public static String getXsdFromGithub() {
@@ -165,15 +174,15 @@ public class FocaXmlSchema {
         sb.append("            <xsd:element name=\"Bind\" type=\"foca:ItemBind\" minOccurs=\"1\" maxOccurs=\"1024\"/>");
         sb.append("        </xsd:sequence>");
         sb.append("        <xsd:attribute name=\"outModel\" type=\"foca:ClassName\" use=\"required\"/>");
-        sb.append("        <xsd:attribute name=\"factory\" type=\"foca:ClassName\" default=\"jp.gr.java_conf.ke.foca.adapter.DefaultFactory\" />");
+        sb.append("        <xsd:attribute name=\"factory\" type=\"foca:ClassName\" default=\"jp.gr.java_conf.ke.foca.converter.DefaultFactory\" />");
         sb.append("    </xsd:complexType>");
         sb.append("");
         sb.append("    <xsd:complexType name=\"ItemBind\">");
         sb.append("        <xsd:sequence>");
-        sb.append("            <xsd:element name=\"From\" type=\"foca:BindAttr\" minOccurs=\"1\" maxOccurs=\"1\"/>");
-        sb.append("            <xsd:element name=\"To\" type=\"foca:BindAttr\" minOccurs=\"1\" maxOccurs=\"1\"/>");
+        sb.append("            <xsd:element name=\"From\" type=\"foca:BindAttr\" minOccurs=\"0\" maxOccurs=\"1\"/>");
+        sb.append("            <xsd:element name=\"To\" type=\"foca:BindAttr\" minOccurs=\"0\" maxOccurs=\"1\"/>");
         sb.append("        </xsd:sequence>");
-        sb.append("        <xsd:attribute name=\"converter\" type=\"foca:ClassName\" default=\"jp.gr.java_conf.ke.foca.adapter.DefaultConverter\" />");
+        sb.append("        <xsd:attribute name=\"converter\" type=\"foca:ClassName\" default=\"jp.gr.java_conf.ke.foca.converter.DefaultConverter\" />");
         sb.append("    </xsd:complexType>");
         sb.append("");
         sb.append("    <xsd:complexType name=\"Joinpoint\">");

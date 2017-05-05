@@ -1,6 +1,6 @@
 package jp.gr.java_conf.ke.foca.xml;
 
-import java.net.URL;
+import org.xml.sax.InputSource;
 
 import jp.gr.java_conf.ke.namespace.foca.LayerContext;
 import jp.gr.java_conf.ke.namespace.foca.Logger;
@@ -15,8 +15,8 @@ import jp.gr.java_conf.ke.util.xml.exception.XmlSourceExeption;
 
 public class FocaXmlParser extends XmlPushParser<LayerContext> {
 
-    public FocaXmlParser(URL xmlSource) throws SAXParserException, XmlSourceExeption {
-        super(xmlSource);
+    public FocaXmlParser(InputSource is) throws SAXParserException, XmlSourceExeption {
+        super(is);
     }
 
     XmlNodeBuilder builder;
@@ -49,11 +49,6 @@ public class FocaXmlParser extends XmlPushParser<LayerContext> {
     protected void text(XmlElement element, String cdata) {}
 
     public LayerContext parse() throws XmlSourceExeption {
-        try {
-            FocaXmlSchema.validate(getURL());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return super.parse();
     }
 

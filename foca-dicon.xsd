@@ -96,15 +96,15 @@ elementFormDefault="qualified">
             <xsd:element name="Bind" type="foca:ItemBind" minOccurs="1" maxOccurs="1024"/>
         </xsd:sequence>
         <xsd:attribute name="outModel" type="foca:ClassName" use="required"/>
-        <xsd:attribute name="factory" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultFactory" />
+        <xsd:attribute name="factory" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.converter.DefaultFactory" />
     </xsd:complexType>
 
     <xsd:complexType name="ItemBind">
         <xsd:sequence>
-            <xsd:element name="From" type="foca:BindAttr" minOccurs="1" maxOccurs="1"/>
-            <xsd:element name="To" type="foca:BindAttr" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="From" type="foca:BindAttr" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="To" type="foca:BindAttr" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
-        <xsd:attribute name="converter" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultConverter" />
+        <xsd:attribute name="converter" type="foca:ClassName" default="jp.gr.java_conf.ke.foca.converter.DefaultConverter" />
     </xsd:complexType>
 
     <xsd:complexType name="Joinpoint">

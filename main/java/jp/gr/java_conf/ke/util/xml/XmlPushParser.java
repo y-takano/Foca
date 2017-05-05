@@ -1,12 +1,14 @@
 package jp.gr.java_conf.ke.util.xml;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,7 +28,8 @@ import jp.gr.java_conf.ke.util.xml.exception.XmlSyntaxException;
 
 public abstract class XmlPushParser<R> extends DefaultHandler {
 
-    private final String xmlSource;
+    private final String xmlSourceURL;
+    private final InputSource xmlSourceIS;
     private final SAXParser baseParser;
 
     private XmlLocation errorLocation;
@@ -37,18 +40,19 @@ public abstract class XmlPushParser<R> extends DefaultHandler {
     private R ret;
     private XmlException waningExp;
 
-    protected XmlPushParser(URI xmlSource) throws SAXParserException {
-        this(xmlSource.toASCIIString());
+    protected XmlPushParser(URI xmlSourceURL) throws SAXParserException {
+        this(xmlSourceURL.toASCIIString());
     }
 
-    protected XmlPushParser(URL xmlSource) throws SAXParserException, XmlSourceExeption {
-        this(normalize(xmlSource));
+    protected XmlPushParser(URL xmlSourceURL) throws SAXParserException, XmlSourceExeption {
+        this(normalize(xmlSourceURL));
     }
 
-    protected XmlPushParser(String xmlSource) throws SAXParserException {
-        if (xmlSource == null) throw new NullPointerException();
-        this.xmlSource = xmlSource;
-        errorLocation = new XmlLocation(xmlSource);
+    protected XmlPushParser(String xmlSourceURL) throws SAXParserException {
+        if (xmlSourceURL == null) throw new NullPointerException();
+        this.xmlSourceURL = xmlSourceURL;
+        this.xmlSourceIS = null;
+        errorLocation = new XmlLocation(xmlSourceURL);
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
         String factoryClass = "[UnExpected]";
@@ -63,11 +67,22 @@ public abstract class XmlPushParser<R> extends DefaultHandler {
         }
     }
 
-    protected URL getURL() {
+    protected XmlPushParser(InputSource xmlSourceIS) throws SAXParserException {
+        if (xmlSourceIS == null) throw new NullPointerException();
+        this.xmlSourceURL = null;
+        this.xmlSourceIS = xmlSourceIS;
+        errorLocation = new XmlLocation("[InputStream]");
+
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        String factoryClass = "[UnExpected]";
         try {
-            return new URL(xmlSource);
-        } catch (Exception e) {
-            return null;
+            factoryClass = factory.getClass().getCanonicalName();
+            baseParser = factory.newSAXParser();
+        } catch (ParserConfigurationException e) {
+            throw new SAXParserException(factoryClass, e);
+
+        } catch (SAXException e) {
+            throw new SAXParserException(factoryClass, e);
         }
     }
 
@@ -89,12 +104,20 @@ public abstract class XmlPushParser<R> extends DefaultHandler {
 
     public R parse() throws XmlSourceExeption {
         try {
-            baseParser.parse(xmlSource, this);
+            if (xmlSourceIS != null) baseParser.parse(xmlSourceIS, this);
+            else baseParser.parse(xmlSourceURL, this);
         } catch (SAXException e) {
             throw new XmlSyntaxException(e, errorLocation);
 
         } catch (IOException e) {
             throw new XmlSourceExeption(e, errorLocation);
+        } finally {
+            if (xmlSourceIS != null) {
+                try {
+                    InputStream is = xmlSourceIS.getByteStream();
+                    if (is != null) is.close();
+                } catch(Exception e) {}
+            }
         }
 
         if (fatalError || error) {

@@ -19,32 +19,44 @@ public class Reflection {
 
     public static <E> E newInstance(String className, Class<E> _interface) {
         Class<?> retClass;
-        E ret;
         try {
             retClass = Class.forName(className);
-            Object callee = retClass.newInstance();
-            if (_interface != null && !_interface.isInstance(callee)) {
-                throw new ReflectiveException(
-                        "インスタンスは" + _interface.getCanonicalName() +"を実装していません。" + NL +
-                                "対象クラス: " + className);
-            }
-            ret = (E) callee;
-
         } catch (ClassCastException e) {
             throw new ReflectiveException("無効なクラス指定: " + className, e);
 
         } catch (ClassNotFoundException e) {
             throw new ReflectiveException("無効なクラス指定: " + className, e);
+        }
+        return newInstance(retClass, _interface);
+    }
+
+    public static <E> E newInstance(Class<?> clazz) {
+        return newInstance(clazz, null);
+    }
+
+    public static <E> E newInstance(Class<?> clazz, Class<E> _interface) {
+        E ret;
+        try {
+            Object callee = clazz.newInstance();
+            if (_interface != null && !_interface.isInstance(callee)) {
+                throw new ReflectiveException(
+                        "インスタンスは" + _interface.getCanonicalName() +"を実装していません。" + NL +
+                                "対象クラス: " + clazz.getCanonicalName());
+            }
+            ret = (E) callee;
+
+        } catch (ClassCastException e) {
+            throw new ReflectiveException("無効なクラス指定: " + clazz.getCanonicalName(), e);
 
         } catch (InstantiationException e) {
             throw new ReflectiveException(
                     "インスタンスを生成できません。publicデフォルトコンストラクタを有効にしてください。" + NL +
-                            "対象クラス: " + className, e);
+                            "対象クラス: " + clazz.getCanonicalName(), e);
 
         } catch (IllegalAccessException e) {
             throw new ReflectiveException(
                     "インスタンスを生成できません。publicデフォルトコンストラクタを有効にしてください。" + NL +
-                            "対象クラス: " + className, e);
+                            "対象クラス: " + clazz.getCanonicalName(), e);
 
         }
         return ret;

@@ -129,7 +129,7 @@ class XmlLocation implements XmlElement, Cloneable {
         sb.append(NL);
         sb.append("[XML Source Error Report]");
         sb.append(NL);
-        sb.append("  RootURL=");
+        sb.append("  source=");
         sb.append(getURI());
         sb.append(NL);
         if (!msgStack.isEmpty()) {

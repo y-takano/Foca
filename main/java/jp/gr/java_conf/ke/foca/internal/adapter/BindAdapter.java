@@ -7,14 +7,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jp.gr.java_conf.ke.foca.adapter.FetchableAdapter;
+import jp.gr.java_conf.ke.foca.converter.DefaultConverter;
 import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
-import jp.gr.java_conf.ke.foca.adapter.ParamTypeConverter;
+import jp.gr.java_conf.ke.foca.converter.ParamTypeConverter;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.InjectException;
-import jp.gr.java_conf.ke.foca.adapter.ParameterConvertException;
+import jp.gr.java_conf.ke.foca.converter.ParameterConvertException;
 import jp.gr.java_conf.ke.foca.XmlConsistencyException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.namespace.foca.BindAttr;
 import jp.gr.java_conf.ke.util.Reflection;
 import jp.gr.java_conf.ke.namespace.foca.ItemBind;
 
@@ -22,7 +24,7 @@ import jp.gr.java_conf.ke.namespace.foca.ItemBind;
  * Created by YT on 2017/03/26.
  */
 
-class BindAdapter implements InterfaceAdapter {
+class BindAdapter implements FetchableAdapter {
 
     private static final String NL = System.getProperty("line.separator");
 
@@ -46,7 +48,9 @@ class BindAdapter implements InterfaceAdapter {
      */
     private Object outModel;
 
-    <E extends Annotation> BindAdapter(Object callee, Object outModel, List<MethodAdvice> advices, Class<E> annotation, List<ItemBind> bindList) throws FocaException {
+    <E extends Annotation> BindAdapter(
+            Object callee, Object outModel, List<MethodAdvice> advices,
+            Class<E> annotation, List<ItemBind> bindList) throws FocaException {
         Method targetMethod = null;
         for (Method m : callee.getClass().getDeclaredMethods()) {
             for (Annotation anno : m.getDeclaredAnnotations()) {
@@ -69,8 +73,23 @@ class BindAdapter implements InterfaceAdapter {
             for (ItemBind bind : bindList) {
                 ParamTypeConverter cnverter = Reflection.newInstance(
                         bind.getConverter(), ParamTypeConverter.class);
+                if (cnverter instanceof DefaultConverter) {
+                    BindAttr from = bind.getFrom();
+                    BindAttr to = bind.getTo();
+                    if (from == null || to == null) {
+                        throw new XmlConsistencyException(
+                                "Bind定義にconverterを指定しない場合、From,To要素は必須です。XMLの定義を見直してください。" + NL +
+                                        "From: " + from + NL +
+                                        "To  : " + to + NL +
+                                        "対象クラス: " + callee.getClass().getCanonicalName() + NL +
+                                        "マーカー　: " + annotation.getCanonicalName()
+                        );
+                    }
+                }
                 cnvMap.put(bind, cnverter);
             }
+        } catch (FocaException e) {
+            throw e;
         } catch (Exception e) {
             throw new XmlConsistencyException(
                     "Bind定義に指定されたクラスを生成できません。XMLの定義と実装を見直してください。" + NL +
@@ -85,6 +104,11 @@ class BindAdapter implements InterfaceAdapter {
 
     @Override
     public void invoke(Object param) throws Throwable {
+        fetch(param);
+    }
+
+    @Override
+    public Object fetch(Object param) throws Throwable {
         try {
             for (Entry<ItemBind, ParamTypeConverter> entry : cnvMap.entrySet()) {
                 outModel = entry.getValue().convert(
@@ -102,7 +126,6 @@ class BindAdapter implements InterfaceAdapter {
                             "OUT Parameter: " + outModel.getClass().getCanonicalName()
                     , e);
         }
-        weaver.invoke(method, outModel);
+        return weaver.invoke(method, outModel);
     }
-
 }

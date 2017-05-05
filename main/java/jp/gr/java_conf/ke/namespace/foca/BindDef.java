@@ -24,7 +24,7 @@ import java.util.List;
  *         &lt;element name="Bind" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ItemBind" maxOccurs="1024"/>
  *       &lt;/sequence>
  *       &lt;attribute name="outModel" use="required" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ClassName" />
- *       &lt;attribute name="factory" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ClassName" default="jp.gr.java_conf.ke.foca.adapter.DefaultFactory" />
+ *       &lt;attribute name="factory" type="{http://www.java_conf.gr.jp/ke/namespace/foca}ClassName" default="jp.gr.java_conf.ke.foca.converter.DefaultFactory" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -101,7 +101,7 @@ public class BindDef {
      */
     public String getFactory() {
         if (factory == null) {
-            return "jp.gr.java_conf.ke.foca.adapter.DefaultFactory";
+            return "jp.gr.java_conf.ke.foca.converter.DefaultFactory";
         } else {
             return factory;
         }

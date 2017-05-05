@@ -16,24 +16,17 @@ public class InjectRequest {
 
     private final InjectState state;
 
-    private final InjectTarget target;
-
     public InjectRequest(URL sourceURL, DIContents contents, Object target) {
         this.sourceURL = sourceURL;
         this.contents = contents;
-        this.state = new InjectState();
-        this.target = new InjectTarget(target);
+        this.state = new InjectState(contents.hashCode(), target);
     }
 
     public InjectRequest(InjectRequest request, Object target) {
         this.sourceURL = request.getSourceURL();
         this.contents = request.getContents();
         this.state = request.getState();
-        this.target = new InjectTarget(target);
-    }
-
-    public InjectTarget getTarget() {
-        return target;
+        state.setNext(target);
     }
 
     public InjectState getState() {

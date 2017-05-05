@@ -1,4 +1,4 @@
-package jp.gr.java_conf.ke.foca.adapter;
+package jp.gr.java_conf.ke.foca.converter;
 
 import jp.gr.java_conf.ke.util.Reflection;
 

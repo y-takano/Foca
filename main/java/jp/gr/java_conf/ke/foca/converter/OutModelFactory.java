@@ -1,4 +1,4 @@
-package jp.gr.java_conf.ke.foca.adapter;
+package jp.gr.java_conf.ke.foca.converter;
 
 /**
  * Created by YT on 2017/04/12.
