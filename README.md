@@ -10,13 +10,20 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
   <dd>DIコンテナ設定ファイル(XML), またはXML構造のBeanを利用して依存性を表現します。</dd>
   <dt>・Annotation API(Core):</dt>
   <dd>依存性の注入をする箇所をアノテーションで実装するための仕組み。</dd>
-  <dt>・Aspecter API(Option):</dt>
-  <dd>所定のjoinpointに対してadviceを実装するための仕組み。</dd>
   <dt>・Converter API(Option):</dt>
   <dd>レイヤ間の通信データ変換を簡潔にするための仕組み。</dd>
+  <dt>・Aspecter API(Option):</dt>
+  <dd>所定のjoinpointに対してadviceを実装するための仕組み。</dd>
 </dl>
 
 ※ 凡例: Core-主要機能:必須, Option-オプション機能:任意  
+
+| API | パッケージ名 | パッケージ説明 |
+|:-----------:|:------------|:------------|
+| Injection API(Core) | [jp.gr.java_conf.ke.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca) | DIコンテナの設定と反映を行うFocaクラスと例外クラスを保有します。 |
+| Annotation API(Core) | [jp.gr.java_conf.ke.foca.adapter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/adapter), [jp.gr.java_conf.ke.foca.annotation](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/annotation),  | 依存性の注入箇所を指定するための機能を保有します。  |
+| Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/converter) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
+| Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/aop) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
 
 ## Install（環境設定）
 
@@ -169,6 +176,12 @@ class View {
     }
 }
 ```
+##### System.out
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before usecase
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before something
+> Hello World!!!
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after something
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after usecase
 
 ### Unittest
 Unittest: https://github.com/y-takano/Foca/blob/master/test/java/jp/gr/java_conf/ke/foca/ExampleUnitTest.java  
