@@ -2,6 +2,8 @@
 クリーンアーキテクチャの思想を落とし込んだ軽量DIコンテナ。あらゆるアプリケーションに適用可能。  
 使用可能言語: java または android
 
+-------------
+
 ## Overview（概要）
 FocaはDI/AOPを実現することで、アプリケーション層と外部構造を疎結合させるための手助けをします。
 
@@ -25,6 +27,8 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 | Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/converter) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
 | Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/aop) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
 
+-------------
+
 ## Install（環境設定）
 
 現在はAndroid用のみaarファイル形式で公開しています。  
@@ -42,6 +46,8 @@ dependencies {
 }
 ```
 
+-------------
+
 ## Requirement（依存関係）
 
 依存ライブラリなし。動作保障環境は以下の通り。
@@ -49,14 +55,18 @@ dependencies {
 >　Java Runtime: 1.5(Tiger)以上  
 >　Android minSdkLevel: 8(Froyo)以上 （最低動作保証APIレベル）  
 
+-------------
+
 ## Usage（使い方）
 
 XSD: https://github.com/y-takano/Foca/blob/master/foca-dicon.xsd  
 XMLサンプル: https://github.com/y-takano/Foca/blob/master/foca-dicon_sample.xml  
 
-### Injection API(Core)
+以下、主要機能のサンプルコードを提示します。
 
-サンプルコードを提示します。
+-------------
+
+### Injection API(Core)
 
 ###### DIコンテナ設定ファイル(XML)
 
@@ -102,6 +112,7 @@ Foca.updateDefault(new URL("https://raw.githubusercontent.com/y-takano/Foca/mast
 // DIを実行
 SampleObject obj = Foca.getDefault().createInstance(SampleObject.class);
 ```
+-------------
 
 ### Annotation API(Core)
 
@@ -177,11 +188,13 @@ class View {
 }
 ```
 ##### System.out
-> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before usecase
-> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before something
-> Hello World!!!
-> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after something
-> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after usecase
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before usecase  
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: before something  
+> Hello World!!!  
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after something  
+> 20XX/XX/XX XX:XX:XX:XXX JST: [DEBUG]: after usecase  
+
+-------------
 
 ### Unittest
 Unittest: https://github.com/y-takano/Foca/blob/master/test/java/jp/gr/java_conf/ke/foca/ExampleUnitTest.java  
@@ -212,6 +225,7 @@ Unittest: https://github.com/y-takano/Foca/blob/master/test/java/jp/gr/java_conf
 > 2017/05/06 09:05:10:654 JST: [DEBUG]: [MAIN   ]: end repaint.  
 > 2017/05/06 09:05:10:657 JST: [INFO ]: test end.  
 
+-------------
 
 ## Licence
 [MIT](http://opensource.org/licenses/mit-license.php)
