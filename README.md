@@ -4,11 +4,11 @@
   
 想定されるメリット・デメリットは以下の通り.  
 メリット:    
-　クリーンアーキテクチャの恩恵を受けること.    
-　システムやアプリケーションの機能の独立性が高まり、保守性に期待できる. チーム開発や学習用に適している.    
-デメリット:    
-　厳密に機能分割することが求められるため、密結合していた方が都合がいい場合は適さない.    
-　リフレクションを多用するため、性能を最重視するような場合も適さない.    
+　クリーンアーキテクチャの恩恵を受けること.(MVCアーキテクチャ, ドメイン駆動, テスト駆動等にも適合する。)    
+　システムやアプリケーションの機能独立性が高まり、保守性に期待できる. チーム開発や標準化に適している.    
+デメリット:    
+　厳密に機能分割することが求められるため、クラス数が一定以上必要になること.  
+　ソースコードのサイズを最小化したい場合には適さない. また、リフレクションを多用するため、性能を突き詰めるような開発には適さない.    
 
 -------------
 
@@ -31,7 +31,7 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 | API | パッケージ名 | パッケージ説明 |
 |:-----------:|:------------|:------------|
 | Injection API(Core) | [jp.gr.java_conf.ke.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca), [jp.gr.java_conf.ke.namespace.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/namespace/foca) | DIコンテナの設定を行うFocaクラスとXSDから生成されたBeanクラス、FW例外クラスを保有します。 |
-| Annotation API(Core) | [jp.gr.java_conf.ke.foca.adapter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/adapter), [jp.gr.java_conf.ke.foca.annotation](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/annotation),  | 依存性の注入箇所を指定するための機能を保有します。  |
+| Annotation API(Core) | [jp.gr.java_conf.ke.foca.annotation](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/annotation),  | 依存性の注入箇所を指定するための機能を保有します。  |
 | Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/converter) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
 | Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/aop) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
 
