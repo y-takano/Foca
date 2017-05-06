@@ -22,7 +22,7 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 
 | API | パッケージ名 | パッケージ説明 |
 |:-----------:|:------------|:------------|
-| Injection API(Core) | [jp.gr.java_conf.ke.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca) | DIコンテナの設定と反映を行うFocaクラスと例外クラスを保有します。 |
+| Injection API(Core) | [jp.gr.java_conf.ke.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca), [jp.gr.java_conf.ke.namespace.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/namespace/foca) | DIコンテナの設定を行うFocaクラスとXSDから生成されたBeanクラス、FW例外クラスを保有します。 |
 | Annotation API(Core) | [jp.gr.java_conf.ke.foca.adapter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/adapter), [jp.gr.java_conf.ke.foca.annotation](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/annotation),  | 依存性の注入箇所を指定するための機能を保有します。  |
 | Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/converter) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
 | Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/aop) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
