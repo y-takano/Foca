@@ -1,5 +1,5 @@
 # Foca - the Framework Of Clean Architecture. 
-クリーンアーキテクチャの思想を落とし込んだ軽量DIコンテナ。あらゆるアプリケーションに適用可能.  
+クリーンアーキテクチャの思想を落とし込んだ軽量DIコンテナ.あらゆるアプリケーションに適用可能.  
   
 使用可能言語: java または android
   
@@ -22,8 +22,7 @@ The Clean Architecture邦訳: http://blog.tai2.net/the_clean_architecture.html
 -------------
 
 ## Overview（概要）
-FocaはDI/AOPを実現することで、アプリケーション層と外部構造を疎結合させるための手助けをします。
-
+FocaはDI/AOPを実現することで、アプリケーション層と外部構造を疎結合させるための手助けをします.  
 <dl>
   <dt>・Injection API(Core):</dt>
   <dd>DIコンテナ設定ファイル(XML), またはXML構造のBeanを利用して依存性を表現します。</dd>
@@ -48,10 +47,18 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 
 ## Install（環境設定）
 
-現在はAndroid用のみaarファイル形式で公開しています。  
-※Java版のモジュール公開は準備中です。お手数ですが、ソースファイルからjarを生成してください。
+FocaはgithubによるMavenリポジトリの公開をしています.  
+jar形式とaar形式を別々のartifactとして公開していますので、用途に応じてご自由に選択してください.  
+  
+＜Mavenリポジトリ情報＞  
+リポジトリURL: http://y-takano.github.com/Foca/repository  
+groupId: y-takano  
+artifactId(aar): foca-aar  
+artifactId(jar): foca-jar  
+最新version: 1.0.0  
+  
+Android Studioから利用する場合は、以下の設定でライブラリが適用されます.  
 
-＜Android Studioから利用する場合＞
 ##### build.gradle
 
 ```gradle
@@ -59,7 +66,7 @@ repositories {
     maven { url 'http://y-takano.github.com/Foca/repository' }
 }
 dependencies {
-    compile 'y-takano:foca:1.0.5'
+    compile 'y-takano:foca-aar:1.0.0'
 }
 ```
 
