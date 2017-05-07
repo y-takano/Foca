@@ -44,22 +44,18 @@ class XmlLocation implements XmlElement, Cloneable {
 
     XmlLocation (final SAXParseException e, String uri, String localName, String qName) {
         this(new Locator() {
-            @Override
             public String getPublicId() {
                 return e.getPublicId();
             }
 
-            @Override
             public String getSystemId() {
                 return e.getSystemId();
             }
 
-            @Override
             public int getLineNumber() {
                 return e.getLineNumber();
             }
 
-            @Override
             public int getColumnNumber() {
                 return e.getColumnNumber();
             }

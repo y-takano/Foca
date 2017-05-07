@@ -16,11 +16,11 @@ package jp.gr.java_conf.ke.namespace.foca;
  * <pre>
  * &lt;simpleType name="ContentType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}normalizedString">
- *     &lt;enumeration value="UI"/>
- *     &lt;enumeration value="Web"/>
- *     &lt;enumeration value="DB"/>
- *     &lt;enumeration value="Device"/>
- *     &lt;enumeration value="Service"/>
+ *     &lt;enumeration requireNonNull="UI"/>
+ *     &lt;enumeration requireNonNull="Web"/>
+ *     &lt;enumeration requireNonNull="DB"/>
+ *     &lt;enumeration requireNonNull="Device"/>
+ *     &lt;enumeration requireNonNull="Service"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>

@@ -2,8 +2,6 @@ package jp.gr.java_conf.ke.foca.xml;
 
 import org.xml.sax.SAXParseException;
 
-import java.net.URL;
-
 import jp.gr.java_conf.ke.namespace.foca.Aspect;
 import jp.gr.java_conf.ke.namespace.foca.BindAttr;
 import jp.gr.java_conf.ke.namespace.foca.BindDef;
@@ -76,22 +74,16 @@ class XmlNodeBuilder {
     void acceptStart(XmlElement element) {
         String qName = element.getQName();
 
-        if (depth == 0 && !qName.equals("LayerContext")) {
-            callFatalError("{LayerContext}ではないXMLエレメントが定義されています", element);
-        } else {
-            for (XmlAttribute attr : element.attributes()) {
-                if (attr.getQName().equals("extend")) {
-                    try {
-                        URL url = new URL(attr.getValue());
-                        this.context = new FocaXmlParser(FocaXmlSchema.validate(url)).parse();
-                    } catch (Exception e) {
-                        callFatalError(e.getMessage(), element);
-                    }
-                    this.context = new LayerContext();
-                }
-            }
-            if (this.context == null) {
+        if (depth == 0) {
+            if (!qName.equals("LayerContext")) {
+                callFatalError("{LayerContext}ではないXMLエレメントが定義されています", element);
+            } else {
                 this.context = new LayerContext();
+                for (XmlAttribute attr : element.attributes()) {
+                    if (attr.getQName().equals("extend")) {
+                        this.context.setExtend(attr.getValue());
+                    }
+                }
             }
         }
 

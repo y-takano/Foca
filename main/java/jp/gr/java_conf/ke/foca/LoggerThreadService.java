@@ -6,7 +6,7 @@ import java.lang.reflect.Proxy;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import jp.gr.java_conf.ke.foca.aop.Logger;
+import jp.gr.java_conf.ke.foca.annotation.Logger;
 import jp.gr.java_conf.ke.util.Reflection;
 import jp.gr.java_conf.ke.namespace.foca.LogLevel;
 
@@ -58,14 +58,13 @@ class LoggerThreadService {
     private static final class LoggerProxy implements InvocationHandler {
 
         private LogLevel level;
-        private jp.gr.java_conf.ke.foca.aop.Logger logger;
+        private Logger logger;
 
-        LoggerProxy(LogLevel level, jp.gr.java_conf.ke.foca.aop.Logger logger) {
+        LoggerProxy(LogLevel level, Logger logger) {
             this.level = level;
             this.logger = logger;
         }
 
-        @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getName().startsWith("getLevel")) {
                 switch (level) {

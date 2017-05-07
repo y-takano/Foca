@@ -1,9 +1,8 @@
 package jp.gr.java_conf.ke.foca;
 
 /**
- * Created by YT on 2017/03/27.
+ * XMLまたはJavaBeanのDI設定情報とアプリケーションの実装が不整合.
  */
-
 public class XmlConsistencyException extends FocaException {
 
     public XmlConsistencyException(String msg) {

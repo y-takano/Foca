@@ -3,9 +3,17 @@ package jp.gr.java_conf.ke.foca.converter;
 import jp.gr.java_conf.ke.util.Reflection;
 
 /**
- * Created by YT on 2017/04/12.
+ * データ変換インターフェースのデフォルト実装.<br>
+ * <br>
+ * バインド定義のconverterを指定しない場合に動作します。<br>
+ * {@link AbstractConverter}を継承しています。<br>
+ *
+ * @param <IN> InterfaceAdapterの呼出元から渡されたパラメータ
+ * @param <OUT> 出口メソッドに渡されるデータのインスタンス(生成済)
+ * @param <PARAM> INパラメータから取得した型クラス
+ * @see ParamTypeConverter
+ * @see AbstractConverter
  */
-
 public class DefaultConverter<IN, OUT, PARAM> extends AbstractConverter<IN, OUT, PARAM> {
 
     @Override

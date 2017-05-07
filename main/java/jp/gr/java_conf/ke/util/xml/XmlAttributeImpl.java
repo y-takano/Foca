@@ -97,7 +97,7 @@ class XmlAttributeImpl implements XmlAttribute {
         sb.append(",");sb.append("localName:");sb.append(getLocalName());
         sb.append(",");sb.append("qName:");sb.append(getQName());
         sb.append(",");sb.append("type:");sb.append(getType());
-        sb.append(",");sb.append("value:");sb.append(getValue());
+        sb.append(",");sb.append("requireNonNull:");sb.append(getValue());
         return sb.append("}").toString();
     }
 }

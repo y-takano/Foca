@@ -3,9 +3,16 @@ package jp.gr.java_conf.ke.foca;
 import java.lang.annotation.Annotation;
 
 /**
- * Created by YT on 2017/04/09.
+ * DIコンテナにname属性の要素が存在しない.
+ * @see jp.gr.java_conf.ke.foca.annotation.Log
+ * @see jp.gr.java_conf.ke.foca.annotation.entrance.Controller
+ * @see jp.gr.java_conf.ke.foca.annotation.entrance.Presenter
+ * @see jp.gr.java_conf.ke.foca.annotation.entrance.Gateway
+ * @see jp.gr.java_conf.ke.foca.annotation.exit.InputPort
+ * @see jp.gr.java_conf.ke.foca.annotation.exit.View
+ * @see jp.gr.java_conf.ke.foca.annotation.exit.Driver
+ * @see jp.gr.java_conf.ke.foca.annotation.exit.EntryPoint
  */
-
 public class DefinitionNotFound extends InjectException {
 
     private static final String NL = System.getProperty("line.separator");

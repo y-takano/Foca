@@ -5,12 +5,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
-import jp.gr.java_conf.ke.foca.adapter.FetchableAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.FetchableAdapter;
 import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
 import jp.gr.java_conf.ke.foca.InjectException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
 import jp.gr.java_conf.ke.util.Reflection;
 
 /**
@@ -55,13 +55,14 @@ class PluginAdapter implements FetchableAdapter {
         this.callee = (InterfaceAdapter) createProxy(callee, advices);
     }
 
-    @Override
     public void invoke(Object param) throws Throwable {
         callee.invoke(param);
     }
 
-    @Override
     public Object fetch(Object param) throws Throwable {
+        if (param != null && param instanceof Object[]) {
+            throw new IllegalArgumentException("引数に配列型は認められていません。");
+        }
         return ((FetchableAdapter)callee).fetch(param);
     }
 

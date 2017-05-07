@@ -4,11 +4,11 @@ import java.util.List;
 
 import jp.gr.java_conf.ke.foca.DIContents;
 import jp.gr.java_conf.ke.foca.InjectException;
-import jp.gr.java_conf.ke.foca.annotation.Driver;
-import jp.gr.java_conf.ke.foca.annotation.InputPort;
+import jp.gr.java_conf.ke.foca.annotation.exit.Driver;
+import jp.gr.java_conf.ke.foca.annotation.exit.InputPort;
 import jp.gr.java_conf.ke.foca.DefinitionNotFound;
 import jp.gr.java_conf.ke.foca.FocaException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
 import jp.gr.java_conf.ke.foca.internal.adapter.AdapterFactory;
 import jp.gr.java_conf.ke.namespace.foca.Aspect;
 import jp.gr.java_conf.ke.namespace.foca.Converter;
@@ -35,7 +35,7 @@ class GatewayInjector extends Injector {
         if (gateways == null) {
             throw new DefinitionNotFound(
                     getFieldName(), gatewayName,
-                    jp.gr.java_conf.ke.foca.annotation.Gateway.class);
+                    jp.gr.java_conf.ke.foca.annotation.entrance.Gateway.class);
         }
 
         FocaException exception = null;

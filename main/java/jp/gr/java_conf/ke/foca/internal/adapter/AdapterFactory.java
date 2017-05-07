@@ -7,7 +7,7 @@ import jp.gr.java_conf.ke.foca.XmlConsistencyException;
 import jp.gr.java_conf.ke.foca.converter.OutModelFactory;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.FocaException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
 import jp.gr.java_conf.ke.foca.internal.InjectRequest;
 import jp.gr.java_conf.ke.foca.internal.InjectService;
 import jp.gr.java_conf.ke.foca.internal.InjectState;

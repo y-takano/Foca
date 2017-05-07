@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 
 import jp.gr.java_conf.ke.foca.annotation.Log;
 import jp.gr.java_conf.ke.foca.internal.InjectionOrder;
-import jp.gr.java_conf.ke.foca.annotation.Controller;
-import jp.gr.java_conf.ke.foca.annotation.Gateway;
-import jp.gr.java_conf.ke.foca.annotation.Presenter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Controller;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Gateway;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Presenter;
 
 /**
  * Created by YT on 2017/04/27.

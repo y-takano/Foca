@@ -16,10 +16,10 @@ package jp.gr.java_conf.ke.namespace.foca;
  * <pre>
  * &lt;simpleType name="PointcutType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}normalizedString">
- *     &lt;enumeration value="All"/>
- *     &lt;enumeration value="WhiteList"/>
- *     &lt;enumeration value="BlackList"/>
- *     &lt;enumeration value="Ignore"/>
+ *     &lt;enumeration requireNonNull="All"/>
+ *     &lt;enumeration requireNonNull="WhiteList"/>
+ *     &lt;enumeration requireNonNull="BlackList"/>
+ *     &lt;enumeration requireNonNull="Ignore"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>

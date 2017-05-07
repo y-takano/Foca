@@ -3,16 +3,19 @@ package jp.gr.java_conf.ke.foca.aop;
 import java.lang.reflect.Method;
 
 import jp.gr.java_conf.ke.foca.Foca;
-import jp.gr.java_conf.ke.foca.FocaException;
+import jp.gr.java_conf.ke.foca.annotation.Logger;
 
 /**
- * Created by YT on 2017/04/20.
+ * メソッド呼び出し前後でトレースログを出力するアドバイス.<br>
+ * <br>
+ * 使用するトレースログは現在のDIコンテナに設定されたデフォルトロガーです。<br>
+ * ロガー取得に使用するメソッド: {@link Foca#getDefaultLogger()}
+ *
+ * @see Foca
  */
-
 public class TraceLogAdvice implements MethodAdvice {
 
-    @Override
-    public Throwable beforeInvoke(Object arg, Object target, Method method) {
+    public Object beforeInvoke(Object arg, Object target, Method method) {
         Logger log = Foca.getDefault().getDefaultLogger();
         StringBuilder sb = new StringBuilder();
         sb.append("call  : ");
@@ -37,11 +40,10 @@ public class TraceLogAdvice implements MethodAdvice {
             sb.append("null");
         }
         log.trace(sb.toString());
-        return null;
+        return arg;
     }
 
-    @Override
-    public Throwable afterInvoke(Object ret, Throwable th, Object target, Method method) {
+    public Object afterInvoke(Object ret, Throwable th, Object target, Method method) {
         Logger log = Foca.getDefault().getDefaultLogger();
         StringBuilder sb = new StringBuilder();
         if (th == null) {
@@ -73,7 +75,11 @@ public class TraceLogAdvice implements MethodAdvice {
             log.trace(sb.toString());
             log.error(th, sb.toString());
         }
-        return th;
+        return ret;
+    }
+
+    public void handleSupressThrow(SuppressThrow cause) {
+
     }
 
 }

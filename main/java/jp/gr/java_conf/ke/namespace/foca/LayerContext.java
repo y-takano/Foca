@@ -41,7 +41,7 @@ public class LayerContext {
     protected String extend;
 
     /**
-     * Gets the value of the logger property.
+     * Gets the requireNonNull of the logger property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -70,7 +70,7 @@ public class LayerContext {
     }
 
     /**
-     * Gets the value of the aspect property.
+     * Gets the requireNonNull of the aspect property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -99,7 +99,7 @@ public class LayerContext {
     }
 
     /**
-     * Gets the value of the dataFlow property.
+     * Gets the requireNonNull of the dataFlow property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,

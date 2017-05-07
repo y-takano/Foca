@@ -7,6 +7,7 @@ import java.util.List;
 
 import jp.gr.java_conf.ke.foca.DIContents;
 import jp.gr.java_conf.ke.foca.FocaException;
+import jp.gr.java_conf.ke.foca.Nullable;
 import jp.gr.java_conf.ke.foca.aop.MethodAdvice;
 import jp.gr.java_conf.ke.foca.internal.injector.Injector;
 import jp.gr.java_conf.ke.foca.internal.injector.InjectorFactory;
@@ -34,7 +35,7 @@ class EntrypointStartService {
         for (EnabledMarker marker : component) {
             flowName = Annotations.getFlowName(marker.annotation());
             if (flowName == null) continue;
-            joinpoint = contents.selectEntrypoint(flowName);
+            joinpoint = contents.selectEntrypoint(flowName).rawValue();
         }
 
         // EntryPoint未定義は正常のため何もせず返す。
@@ -75,7 +76,6 @@ class EntrypointStartService {
 
         // 別スレッドを起動しAspectWeaverを呼び出す
         Thread thread = new Thread(new Runnable() {
-            @Override
             public void run() {
                 try {
                     weaver.invoke(method, null);

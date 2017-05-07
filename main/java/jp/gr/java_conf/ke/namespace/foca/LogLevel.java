@@ -16,10 +16,10 @@ package jp.gr.java_conf.ke.namespace.foca;
  * <pre>
  * &lt;simpleType name="LogLevel">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}normalizedString">
- *     &lt;enumeration value="DEBUG"/>
- *     &lt;enumeration value="TRACE"/>
- *     &lt;enumeration value="INFO"/>
- *     &lt;enumeration value="ERROR"/>
+ *     &lt;enumeration requireNonNull="DEBUG"/>
+ *     &lt;enumeration requireNonNull="TRACE"/>
+ *     &lt;enumeration requireNonNull="INFO"/>
+ *     &lt;enumeration requireNonNull="ERROR"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>

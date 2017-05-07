@@ -2,14 +2,14 @@ package jp.gr.java_conf.ke.foca.internal;
 
 import java.lang.annotation.Annotation;
 
-import jp.gr.java_conf.ke.foca.annotation.Controller;
-import jp.gr.java_conf.ke.foca.annotation.Driver;
-import jp.gr.java_conf.ke.foca.annotation.EntryPoint;
-import jp.gr.java_conf.ke.foca.annotation.Gateway;
-import jp.gr.java_conf.ke.foca.annotation.InputPort;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Controller;
+import jp.gr.java_conf.ke.foca.annotation.exit.Driver;
+import jp.gr.java_conf.ke.foca.annotation.exit.EntryPoint;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Gateway;
+import jp.gr.java_conf.ke.foca.annotation.exit.InputPort;
 import jp.gr.java_conf.ke.foca.annotation.Log;
-import jp.gr.java_conf.ke.foca.annotation.Presenter;
-import jp.gr.java_conf.ke.foca.annotation.View;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Presenter;
+import jp.gr.java_conf.ke.foca.annotation.exit.View;
 
 /**
  * Created by YT on 2017/05/02.

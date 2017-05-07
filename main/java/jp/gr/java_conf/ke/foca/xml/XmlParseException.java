@@ -15,4 +15,5 @@ public class XmlParseException extends FocaException {
     public XmlParseException(String msg, Throwable e) {
         super(msg, e);
     }
+
 }

@@ -5,8 +5,8 @@ import java.lang.reflect.Field;
 import jp.gr.java_conf.ke.foca.DIContents;
 import jp.gr.java_conf.ke.foca.Foca;
 import jp.gr.java_conf.ke.foca.FocaException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
-import jp.gr.java_conf.ke.foca.aop.Logger;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.Logger;
 import jp.gr.java_conf.ke.util.Reflection;
 
 /**
@@ -25,7 +25,7 @@ class LoggerInjector extends Injector {
     }
 
     public void inject(Object injectee, Field targetField) {
-        jp.gr.java_conf.ke.namespace.foca.Logger logger = getContents().getLogger(getName());
+        jp.gr.java_conf.ke.namespace.foca.Logger logger = getContents().getLogger(getName()).rawValue();
         Foca fw = Foca.getDefault();
         Logger log;
         if (logger == null) {

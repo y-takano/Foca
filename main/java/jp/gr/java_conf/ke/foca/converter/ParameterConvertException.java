@@ -1,9 +1,8 @@
 package jp.gr.java_conf.ke.foca.converter;
 
 /**
- * Created by YT on 2017/03/26.
+ * データ変換インターフェースから通知された例外.
  */
-
 public class ParameterConvertException extends Exception {
 
     public ParameterConvertException(String msg, Exception e) {

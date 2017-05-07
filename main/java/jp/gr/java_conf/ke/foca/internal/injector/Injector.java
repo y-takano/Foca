@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import jp.gr.java_conf.ke.foca.DIContents;
 import jp.gr.java_conf.ke.foca.FocaException;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
 import jp.gr.java_conf.ke.foca.internal.adapter.AdapterFactory;
 import jp.gr.java_conf.ke.util.Reflection;
 

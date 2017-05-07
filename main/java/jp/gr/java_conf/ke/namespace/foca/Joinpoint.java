@@ -91,7 +91,7 @@ public class Joinpoint {
     }
 
     /**
-     * Gets the value of the pointcut property.
+     * Gets the requireNonNull of the pointcut property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,

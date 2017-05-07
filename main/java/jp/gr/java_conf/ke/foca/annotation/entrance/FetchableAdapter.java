@@ -1,4 +1,4 @@
-package jp.gr.java_conf.ke.foca.adapter;
+package jp.gr.java_conf.ke.foca.annotation.entrance;
 
 /**
  * Created by YT on 2017/05/05.

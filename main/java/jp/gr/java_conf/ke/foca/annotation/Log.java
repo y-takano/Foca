@@ -6,10 +6,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by YT on 2017/04/18.
+ * {@link Logger}フィールドアノテーション.<br>
+ * <br>
+ * <pre>
+ * 使用例:
+ * <code>@Log</code>
+ * private Logger logger;
+ * </pre>
+ * @see Logger Logger(インターフェース)
+ * @see jp.gr.java_conf.ke.namespace.foca.Logger Logger(Bean)
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Log {
+    /**
+     * Logger要素のname属性を指定します.<br>
+     * @return name属性 default:"DEFAULT"
+     */
     String name() default "DEFAULT";
 }

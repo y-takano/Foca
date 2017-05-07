@@ -117,7 +117,7 @@ public class DataFlow {
     }
 
     /**
-     * Gets the value of the gateway property.
+     * Gets the requireNonNull of the gateway property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,

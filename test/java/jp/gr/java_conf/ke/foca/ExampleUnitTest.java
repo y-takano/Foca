@@ -5,17 +5,17 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import jp.gr.java_conf.ke.foca.adapter.FetchableAdapter;
-import jp.gr.java_conf.ke.foca.annotation.Controller;
-import jp.gr.java_conf.ke.foca.annotation.Driver;
-import jp.gr.java_conf.ke.foca.annotation.EntryPoint;
-import jp.gr.java_conf.ke.foca.annotation.Gateway;
-import jp.gr.java_conf.ke.foca.annotation.InputPort;
+import jp.gr.java_conf.ke.foca.annotation.entrance.FetchableAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Controller;
+import jp.gr.java_conf.ke.foca.annotation.exit.Driver;
+import jp.gr.java_conf.ke.foca.annotation.exit.EntryPoint;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Gateway;
+import jp.gr.java_conf.ke.foca.annotation.exit.InputPort;
 import jp.gr.java_conf.ke.foca.annotation.Log;
-import jp.gr.java_conf.ke.foca.annotation.Presenter;
-import jp.gr.java_conf.ke.foca.annotation.View;
-import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
-import jp.gr.java_conf.ke.foca.aop.Logger;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Presenter;
+import jp.gr.java_conf.ke.foca.annotation.exit.View;
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.Logger;
 
 /**
  * サンプルXMLを利用した代表機能のスルーテスト
@@ -29,6 +29,7 @@ public class ExampleUnitTest {
         URL tmp;
         try {
             tmp = new URL("https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon_sample.xml");
+            //tmp = new URL("file:///C:\\Users\\YT\\AndroidStudioProjects\\Foca\\app\\src\\main\\assets\\foca-dicon.xml");
         } catch(MalformedURLException e) {
             tmp = null;
         }
@@ -108,6 +109,23 @@ public class ExampleUnitTest {
             logger.debug("[USECASE]: update display.");
             presenter.invoke(selected);
             logger.debug("[USECASE]: complete.");
+        }
+    }
+
+    public static class TestDBAdapter implements FetchableAdapter<Data, Data, Throwable> {
+
+        @Log
+        private Logger logger;
+
+        @Driver
+        private FetchableAdapter<Data, Data, ?> database;
+
+        public void invoke(Data data) throws Throwable {
+            fetch(data);
+        }
+
+        public Data fetch(Data data) throws Throwable {
+            return database.fetch(data);
         }
     }
 

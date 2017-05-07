@@ -39,7 +39,7 @@ public class BindDef {
     protected String factory;
 
     /**
-     * Gets the value of the bind property.
+     * Gets the requireNonNull of the bind property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,

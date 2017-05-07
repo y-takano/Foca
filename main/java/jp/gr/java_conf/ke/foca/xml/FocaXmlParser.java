@@ -10,11 +10,16 @@ import jp.gr.java_conf.ke.util.xml.exception.SAXParserException;
 import jp.gr.java_conf.ke.util.xml.exception.XmlSourceExeption;
 
 /**
- * Created by YT on 2017/03/26.
+ * @deprecated フレームワーク内部で使用するためのクラスです。
  */
-
 public class FocaXmlParser extends XmlPushParser<LayerContext> {
 
+    /**
+     * @deprecated フレームワーク内部で使用するためのクラスです。
+     * @param is
+     * @throws SAXParserException
+     * @throws XmlSourceExeption
+     */
     public FocaXmlParser(InputSource is) throws SAXParserException, XmlSourceExeption {
         super(is);
     }

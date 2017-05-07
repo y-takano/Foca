@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jp.gr.java_conf.ke.foca.adapter.FetchableAdapter;
+import jp.gr.java_conf.ke.foca.annotation.entrance.FetchableAdapter;
 import jp.gr.java_conf.ke.foca.converter.DefaultConverter;
 import jp.gr.java_conf.ke.foca.internal.util.AspectWeaver;
 import jp.gr.java_conf.ke.foca.converter.ParamTypeConverter;
@@ -102,13 +102,14 @@ class BindAdapter implements FetchableAdapter {
         this.outModel = outModel;
     }
 
-    @Override
     public void invoke(Object param) throws Throwable {
         fetch(param);
     }
 
-    @Override
     public Object fetch(Object param) throws Throwable {
+        if (param != null && param instanceof Object[]) {
+            throw new IllegalArgumentException("引数に配列型は認められていません。");
+        }
         try {
             for (Entry<ItemBind, ParamTypeConverter> entry : cnvMap.entrySet()) {
                 outModel = entry.getValue().convert(
