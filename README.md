@@ -16,7 +16,7 @@ The Clean Architecture邦訳: http://blog.tai2.net/the_clean_architecture.html
   
 ＜使用上の注意＞:  
 　本フレームワークは純粋なクリーンアーキテクチャから発想を得て個人的な解釈を加えたものとなっている可能性があります.  
-　本開発に際し、全てy-takano個人で行っており提唱元のRobert Martin氏をはじめとする関係団体とは何ら関わりがありません.  
+　本開発に際し、全てy-takano個人で行っており提唱元のRobert Martin氏をはじめとする関係団体とは何ら関わりがありません.  
 　また、団体や法人の公式製品でもありません.以上の関係で何らかのトラブルが発生した場合、予告なく公開を停止する可能性があります.  
   
 -------------
@@ -152,7 +152,7 @@ import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
 class Main {
 
     @Controller(name="test")
-    private InterfaceAdapter<Dto, ?> controller;
+    private InterfaceAdapter<Dto, RuntimeException> controller;
 
     @Log
     private Logger logger;
@@ -177,7 +177,7 @@ import jp.gr.java_conf.ke.foca.adapter.InterfaceAdapter;
 class Usecase {
 
     @Presenter(name="test")
-    private InterfaceAdapter<Dto, ?> presenter;
+    private InterfaceAdapter<Dto, RuntimeException> presenter;
 
     @Log
     private Logger logger;
