@@ -79,9 +79,10 @@ dependencies {
 XSD: https://github.com/y-takano/Foca/blob/master/foca-dicon.xsd  
 XMLサンプル: https://github.com/y-takano/Foca/blob/master/foca-dicon_sample.xml  
 
-以下、主要機能のサンプルコードを提示します。
+### Javadoc
+javadoc https://y-takano.github.io/Foca/site/apidoc/index.html
 
--------------
+以下、主要機能のサンプルコードを提示します。
 
 ### Injection API(Core)
 
