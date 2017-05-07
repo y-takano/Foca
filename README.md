@@ -6,8 +6,6 @@
 The Clean Architecture原文: https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html  
 The Clean Architecture邦訳: http://blog.tai2.net/the_clean_architecture.html  
   
-想定されるメリット・デメリットは以下の通り.  
-  
 ＜メリット＞:  
 　クリーンアーキテクチャの恩恵を受けること.(MVCアーキテクチャ, ドメイン駆動, テスト駆動等にも適合する。)        
 　システムやアプリケーションの機能独立性が高まり、保守性に期待できる. チーム開発や標準化に適している.    
@@ -15,8 +13,6 @@ The Clean Architecture邦訳: http://blog.tai2.net/the_clean_architecture.html
 ＜デメリット＞:  
 　厳密に機能分割することが求められるため、クラス数が一定以上必要になること.  
 　ソースコードのサイズを最小化したい場合には適さない. また、リフレクションを多用するため、性能を突き詰めるような開発には適さない.      
-  
-以下の点を了承した上でご使用ください.  
   
 ＜使用上の注意＞:  
 　本フレームワークは純粋なクリーンアーキテクチャから発想を得て個人的な解釈を加えたものとなっている可能性があります.  
