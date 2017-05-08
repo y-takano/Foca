@@ -22,7 +22,8 @@ The Clean Architecture邦訳: http://blog.tai2.net/the_clean_architecture.html
 -------------
 
 ## Overview（概要）
-FocaはDI/AOPを実現することで、アプリケーション層と外部構造を疎結合させるための手助けをします.  
+FocaはDI/AOPを実現することで、アプリケーション層と外部構造を疎結合させるための手助けをします.  
+
 <dl>
   <dt>・Injection API(Core):</dt>
   <dd>DIコンテナ設定ファイル(XML), またはXML構造のBeanを利用して依存性を表現します。</dd>
@@ -42,6 +43,9 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 | Annotation API(Core) | [jp.gr.java_conf.ke.foca.annotation](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/annotation/package-summary.html),  | 依存性の注入箇所を指定するための機能を保有します。  |
 | Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/converter/package-summary.html) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
 | Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/aop/package-summary.html) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
+
+設計思想に関しては、Qiitaで記事を書いているのでこちらを参照してください。
+http://qiita.com/y-takano/items/ebab24c0d2bdeb6c9870
 
 -------------
 
