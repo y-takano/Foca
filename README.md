@@ -56,8 +56,7 @@ groupId: y-takano
 artifactId(aar): foca-aar  
 artifactId(jar): foca-jar  
 最新version: 1.0.0  
-  
-Android Studioから利用する場合は、以下の設定でライブラリが適用されます.  
+
 
 ##### build.gradle
 
@@ -91,7 +90,8 @@ XMLサンプル: https://github.com/y-takano/Foca/blob/master/foca-dicon_sample.
 
 ### Injection API(Core)
 
-###### APIの使い方(java)
+###### java
+
 ```java
 import jp.gr.java_conf.ke.foca.Foca
 
@@ -101,7 +101,8 @@ Foca.updateDefault(new URL("https://raw.githubusercontent.com/y-takano/Foca/mast
 // DIを実行
 SampleObject obj = Foca.getDefault().createInstance(SampleObject.class);
 ```
-###### DIコンテナ設定ファイル(XML)
+
+###### xml
 
 - DataFlowの設定(必須)
 ```xml:foca-dicon.xml
