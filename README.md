@@ -38,10 +38,10 @@ FocaはDI/AOPを実現することで、アプリケーション層と外部構�
 
 | API | パッケージ名 | パッケージ説明 |
 |:-----------:|:------------|:------------|
-| Injection API(Core) | [jp.gr.java_conf.ke.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca), [jp.gr.java_conf.ke.namespace.foca](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/namespace/foca) | DIコンテナの設定を行うFocaクラスとXSDから生成されたBeanクラス、FW例外クラスを保有します。 |
-| Annotation API(Core) | [jp.gr.java_conf.ke.foca.annotation](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/annotation),  | 依存性の注入箇所を指定するための機能を保有します。  |
-| Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/converter) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
-| Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://github.com/y-takano/Foca/tree/master/main/java/jp/gr/java_conf/ke/foca/aop) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
+| Injection API(Core) | [jp.gr.java_conf.ke.foca](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/package-summary.html), [jp.gr.java_conf.ke.namespace.foca](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/namespace/foca/package-summary.html) | DIコンテナの設定を行うFocaクラスとXSDから生成されたBeanクラス、FW例外クラスを保有します。 |
+| Annotation API(Core) | [jp.gr.java_conf.ke.foca.annotation](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/annotation/package-summary.html),  | 依存性の注入箇所を指定するための機能を保有します。  |
+| Converter API(Option) | [jp.gr.java_conf.ke.foca.converter](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/converter/package-summary.html) | データ変換時に利用するインターフェースおよびデフォルト実装を保有します。 |
+| Aspecter API(Option) | [jp.gr.java_conf.ke.foca.aop](https://y-takano.github.io/Foca/site/apidoc/jp/gr/java_conf/ke/foca/aop/package-summary.html) | adviceの抽象クラス、およびDefaultLoger・TraceLogAdviceの実装を保有します。 |
 
 -------------
 
@@ -83,16 +83,24 @@ dependencies {
 
 ## Usage（使い方）
 
+javadoc: https://y-takano.github.io/Foca/site/apidoc/index.html  
 XSD: https://github.com/y-takano/Foca/blob/master/foca-dicon.xsd  
 XMLサンプル: https://github.com/y-takano/Foca/blob/master/foca-dicon_sample.xml  
-
-### Javadoc
-javadoc https://y-takano.github.io/Foca/site/apidoc/index.html
 
 以下、主要機能のサンプルコードを提示します。
 
 ### Injection API(Core)
 
+###### APIの使い方(java)
+```java
+import jp.gr.java_conf.ke.foca.Foca
+
+// サンプルXMLファイルをメモリに展開する
+Foca.updateDefault(new URL("https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon_sample.xml"));
+
+// DIを実行
+SampleObject obj = Foca.getDefault().createInstance(SampleObject.class);
+```
 ###### DIコンテナ設定ファイル(XML)
 
 - DataFlowの設定(必須)
@@ -127,16 +135,6 @@ javadoc https://y-takano.github.io/Foca/site/apidoc/index.html
 </LayerContext>
 ```
 
-###### APIの使い方
-```java
-import jp.gr.java_conf.ke.foca.Foca
-
-// サンプルXMLファイルをメモリに展開する
-Foca.updateDefault(new URL("https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon_sample.xml");
-
-// DIを実行
-SampleObject obj = Foca.getDefault().createInstance(SampleObject.class);
-```
 -------------
 
 ### Annotation API(Core)
