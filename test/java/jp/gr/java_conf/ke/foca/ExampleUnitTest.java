@@ -5,17 +5,17 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
 import jp.gr.java_conf.ke.foca.annotation.entrance.FetchableAdapter;
 import jp.gr.java_conf.ke.foca.annotation.entrance.Controller;
-import jp.gr.java_conf.ke.foca.annotation.exit.Driver;
-import jp.gr.java_conf.ke.foca.annotation.exit.EntryPoint;
+import jp.gr.java_conf.ke.foca.annotation.entrance.Presenter;
 import jp.gr.java_conf.ke.foca.annotation.entrance.Gateway;
 import jp.gr.java_conf.ke.foca.annotation.exit.InputPort;
-import jp.gr.java_conf.ke.foca.annotation.Log;
-import jp.gr.java_conf.ke.foca.annotation.entrance.Presenter;
+import jp.gr.java_conf.ke.foca.annotation.exit.Driver;
 import jp.gr.java_conf.ke.foca.annotation.exit.View;
-import jp.gr.java_conf.ke.foca.annotation.entrance.InterfaceAdapter;
+import jp.gr.java_conf.ke.foca.annotation.exit.EntryPoint;
 import jp.gr.java_conf.ke.foca.annotation.Logger;
+import jp.gr.java_conf.ke.foca.annotation.Log;
 
 /**
  * サンプルXMLを利用した代表機能のスルーテスト
@@ -29,9 +29,8 @@ public class ExampleUnitTest {
         URL tmp;
         try {
             tmp = new URL("https://raw.githubusercontent.com/y-takano/Foca/master/foca-dicon_sample.xml");
-            //tmp = new URL("file:///C:\\Users\\YT\\AndroidStudioProjects\\Foca\\app\\src\\main\\assets\\foca-dicon.xml");
         } catch(MalformedURLException e) {
-            tmp = null;
+            throw new RuntimeException(e);
         }
         URL = tmp;
     }
@@ -74,9 +73,9 @@ public class ExampleUnitTest {
         private Logger logger;
 
         @Controller(name="test")
-        private InterfaceAdapter<Data, ?> controller;
+        private InterfaceAdapter<Data, RuntimeException> controller;
 
-        public void repaint() throws Throwable {
+        public void repaint() {
             logger.debug("[MAIN   ]: start repaint.");
             Data dto = new Data();
             dto.set("Hello ");
@@ -85,7 +84,7 @@ public class ExampleUnitTest {
         }
 
         @View
-        public void print(Data dto) throws Throwable {
+        public void print(Data dto) {
             logger.info("[VIEW   ]: " + dto.get() + " World!");
         }
     }
@@ -96,36 +95,19 @@ public class ExampleUnitTest {
         private Logger logger;
 
         @Gateway(name="test-db")
-        private FetchableAdapter<Data, Data, ?> database;
+        private FetchableAdapter<Data, Data, RuntimeException> database;
 
         @Presenter(name="test")
-        private InterfaceAdapter<Data, ?> presenter;
+        private InterfaceAdapter<Data, RuntimeException> presenter;
 
         @InputPort
-        public void update(Data param) throws Throwable {
+        public void update(Data param) {
             param.set(param.get() + "Foca");
             logger.debug("[USECASE]: select database.");
             Data selected = database.fetch(param);
             logger.debug("[USECASE]: update display.");
             presenter.invoke(selected);
             logger.debug("[USECASE]: complete.");
-        }
-    }
-
-    public static class TestDBAdapter implements FetchableAdapter<Data, Data, Throwable> {
-
-        @Log
-        private Logger logger;
-
-        @Driver
-        private FetchableAdapter<Data, Data, ?> database;
-
-        public void invoke(Data data) throws Throwable {
-            fetch(data);
-        }
-
-        public Data fetch(Data data) throws Throwable {
-            return database.fetch(data);
         }
     }
 
